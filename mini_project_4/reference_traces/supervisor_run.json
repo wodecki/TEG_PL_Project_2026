@@ -1,0 +1,1845 @@
+{
+  "run": {
+    "run_id": "20261006T213238-33cb1f4c",
+    "date": "2026-10-06",
+    "provider": "openai",
+    "model": "gpt-5.4-mini",
+    "architecture": "supervisor + 3 specialists",
+    "policy_version": "course-v1",
+    "terms_version": "terms-v1",
+    "budget": {
+      "max_steps": 24,
+      "timeout_s": 180
+    }
+  },
+  "traces": [
+    {
+      "trace": {
+        "question_id": "P1",
+        "question": "Ile wynosi kara, którą Mleczna Dolina jest winna Kovalo za lipiec 2026 r.? Podaj kwotę w PLN.",
+        "answer": "Kara za **lipiec 2026** dla **Mlecznej Doliny (SUP-114)** wynosi **7 296,00 PLN**.\n\nŹródła:\n- **CON-101**: zapis kary OTIF — 2% wartości faktur za każdy pełny punkt procentowy poniżej 97%, max 10%.\n- **SUP-114 / 2026-07**: OTIF **94,6%**.\n- **SUP-114 / 2026-07**: faktura **182 400,00 PLN**.\n\nWyliczenie:\n- 97,0% − 94,6% = **2,4 p.p.** (źródło: SUP-114 / 2026-07)\n- **2** pełne p.p. poniżej celu (źródło: obliczenie na podstawie OTIF)\n- 2 × 2% = **4%** (źródło: CON-101)\n- 182 400,00 PLN × 4% = **7 296,00 PLN** (źródło: faktura SUP-114 / 2026-07 + CON-101)\n\nJeśli chcesz, mogę też podać samą podstawę prawną kary z dokumentu.",
+        "status": "answered",
+        "error": null,
+        "events": [
+          {
+            "call_id": "call_5yToRTRtfDaWrSYrc92enya8",
+            "parent_call_id": null,
+            "agent": "supervisor",
+            "tool": "ask_documents_analyst",
+            "arguments": {
+              "task": "Znajdź w dokumentach umowę i/lub aneks dotyczący Mlecznej Doliny oraz lipca 2026 r. Ustal, czy jest zapis o karze za OTIF/terminowość lub innej karze za ten miesiąc, oraz podaj identyfikatory dokumentów i cytat/krótkie streszczenie zapisu, który opisuje podstawę kary."
+            },
+            "origin": "worker_summary",
+            "status": "ok",
+            "result": {
+              "summary": "Znalazłem zapis w **umowie** dotyczącej Mlecznej Doliny:\n\n- **CON-101** — *Streszczenie umowy z dostawcą: Mleczna Dolina (SUP-114) > Kara umowna*\n  - Cytat/streszczenie podstawy kary:  \n    „Jeśli miesięczny wskaźnik OTIF spadnie poniżej 97%, Mleczna Dolina przyznaje Kovalo bonifikatę w wysokości 2% wartości faktur z tego miesiąca za każdy pełny punkt procentowy poniżej celu, nie więcej jednak niż 10% miesięcznej faktury. Kary rozlicza się notą uznaniową do faktury za następny miesiąc.”\n\nDla **lipca 2026 r.** dokument przeglądowy wskazuje, że kara rzeczywiście została naliczona:\n\n- **MTG-403** — *Spotkanie przeglądowe z dostawcą: Mleczna Dolina, 20 sierpnia 2026 r. > 3. Konsekwencje handlowe*\n  - Streszczenie zapisu:  \n    „Zgodnie z umową należą się kary umowne za lipiec (dwa pełne punkty, 4%). … Kary zostaną rozliczone notami uznaniowymi.”\n\nWniosek:\n- Jest zapis o **karze związanej z OTIF/terminowością**.\n- Dla **lipca 2026 r.** w notatce ze spotkania potwierdzono naliczenie **kary umownej**.\n- Podstawa kary wynika z progu **OTIF poniżej 97%** w umowie **CON-101**.\n\nJeśli chcesz, mogę jeszcze wyciągnąć osobno tylko fragmenty dotyczące **lipca 2026** i zestawić je w krótkiej tabeli."
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          },
+          {
+            "call_id": "call_arlj9bXoza0WDaFCiFqq1bx5",
+            "parent_call_id": null,
+            "agent": "supervisor",
+            "tool": "ask_data_analyst",
+            "arguments": {
+              "task": "Dla Mlecznej Doliny oblicz karę za lipiec 2026 r. Na podstawie warunków OTIF z umowy, wartości OTIF za lipiec 2026 r. i odpowiednich faktur/ danych wylicz kwotę kary w PLN. Podaj użyte źródła: identyfikator umowy, identyfikator danych OTIF, identyfikator faktury lub faktur, wzór i wynik końcowy z dokładnością do 2 miejsc po przecinku. Jeśli brakuje danych, wskaż czego brakuje."
+            },
+            "origin": "worker_summary",
+            "status": "ok",
+            "result": {
+              "summary": "Dla **Mlecznej Doliny** za **lipiec 2026 r.** kara za OTIF wynosi:\n\n**7 296,00 PLN**\n\n### Użyte źródła\n- **Umowa:** `CON-101`  \n  - `supplier_id`: `SUP-114`\n  - `otif_target_pct`: **97,0%**\n  - `penalty_clause`: **true**\n  - `rate_per_full_point_pct`: **2,0%**\n  - `cap_pct`: **10,0%**\n- **Dane OTIF:** `SUP-114`, miesiąc **2026-07**\n  - `otif_pct`: **94,6%**\n- **Faktura:** `SUP-114`, miesiąc **2026-07**\n  - `invoiced_grosze`: **18 240 000** groszy = **182 400,00 PLN**\n\n### Wzór i obliczenie\n1. **Niedobór OTIF:**  \n   97,0% − 94,6% = **2,4 p.p.**\n\n2. **Liczba pełnych punktów procentowych poniżej celu:**  \n   **2** pełne p.p.\n\n3. **Kara procentowa przed limitem:**  \n   2 × 2,0% = **4,0%**\n\n4. **Limit kary:**  \n   4,0% < 10,0%, więc limit nie działa.\n\n5. **Kwota kary:**  \n   18 240 000 groszy × 4,0% = **729 600 groszy** = **7 296,00 PLN**\n\n### Wynik końcowy\n**Kara: 7 296,00 PLN**\n\nDodatkowo: umowa ma klauzulę kary (`penalty_clause = true`), więc kara może być naliczona na podstawie tych danych."
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          },
+          {
+            "call_id": "call_GAOrT5SNUWjHjqjp8MRJVheJ",
+            "parent_call_id": null,
+            "agent": "supervisor",
+            "tool": "ask_policy_checker",
+            "arguments": {
+              "task": "Sprawdź, kto musi zatwierdzić rabat/karę dla Mlecznej Doliny zgodnie z polityką Kovalo, jeśli taka zgoda jest wymagana. Podaj identyfikator dokumentu polityki i krótkie uzasadnienie. Jeśli polityka nie ma zastosowania do tej sprawy, powiedz to wprost."
+            },
+            "origin": "worker_summary",
+            "status": "ok",
+            "result": {
+              "summary": "Polityka **POL-001** ma zastosowanie do rabatu.\n\n**Kto musi zatwierdzić:**\n- **Przedstawiciel handlowy**\n\n**Dlaczego:**\n- Rabat **0%** mieści się w przedziale **do 5%**, więc zgodnie z tabelą **POL-001** zatwierdza go Przedstawiciel handlowy.\n- **Nie sprawdzono marży po rabacie**, więc ta część oceny jest niepełna.\n\n**Identyfikator dokumentu polityki:**\n- **POL-001 (version: course-v1)**\n\nJeśli chcesz, mogę też sprawdzić konkretny rabat/karę po podaniu procentu i ewentualnej marży po rabacie."
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          },
+          {
+            "call_id": "call_kD3SSBCjhT4LUZj6SkdZFz6s",
+            "parent_call_id": "call_GAOrT5SNUWjHjqjp8MRJVheJ",
+            "agent": "policy_checker",
+            "tool": "check_discount_policy",
+            "arguments": {
+              "discount_pct": 0,
+              "margin_after_pct": null,
+              "clearance": false,
+              "strategic_account": false,
+              "competitor_offer": false,
+              "contractual_volume_rebate": false
+            },
+            "origin": "calculation",
+            "status": "ok",
+            "result": {
+              "status": "ok",
+              "approvers": [
+                "Przedstawiciel handlowy"
+              ],
+              "reasons": [
+                "rabat 0% mieści się w przedziale do 5%; zatwierdza: Przedstawiciel handlowy (tabela POL-001)",
+                "nie podano marży po rabacie: minimalnej marży nie sprawdzono"
+              ],
+              "version": "course-v1",
+              "margin_checked": false,
+              "partial": true,
+              "note": "tylko informacja: to sprawdzenie niczego nie zatwierdza; wnioski o akceptację przechodzą przez workflow akceptacji (Miniprojekt 3)",
+              "message": null
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          },
+          {
+            "call_id": "call_YOAJOuRiwcf2rNnjK5RR1U5t",
+            "parent_call_id": "call_5yToRTRtfDaWrSYrc92enya8",
+            "agent": "documents_analyst",
+            "tool": "search_documents",
+            "arguments": {
+              "question": "Znajdź umowę i/lub aneks dotyczący Mlecznej Doliny oraz lipca 2026 r. Ustal, czy jest zapis o karze za OTIF/terminowość lub innej karze za ten miesiąc, oraz podaj identyfikatory dokumentów i cytat/krótkie streszczenie zapisu, który opisuje podstawę kary."
+            },
+            "origin": "data",
+            "status": "ok",
+            "result": {
+              "status": "ok",
+              "query": "Znajdź umowę i/lub aneks dotyczący Mlecznej Doliny oraz lipca 2026 r. Ustal, czy jest zapis o karze za OTIF/terminowość lub innej karze za ten miesiąc, oraz podaj identyfikatory dokumentów i cytat/krótkie streszczenie zapisu, który opisuje podstawę kary.",
+              "passages": [
+                {
+                  "doc_id": "CON-101",
+                  "chunk_id": "CON-101#ctx003",
+                  "text": "Streszczenie umowy z dostawcą: Mleczna Dolina (SUP-114) > Kara umowna\n\n## Kara umowna  \nJeśli miesięczny wskaźnik OTIF spadnie poniżej 97%, Mleczna Dolina przyznaje Kovalo bonifikatę w wysokości 2% wartości faktur z tego miesiąca za każdy pełny punkt procentowy poniżej celu, nie więcej jednak niż 10% miesięcznej faktury. Kary rozlicza się notą uznaniową do faktury za następny miesiąc."
+                },
+                {
+                  "doc_id": "MTG-403",
+                  "chunk_id": "MTG-403#ctx003",
+                  "text": "Spotkanie przeglądowe z dostawcą: Mleczna Dolina, 20 sierpnia 2026 r. > 3. Konsekwencje handlowe\n\n## 3. Konsekwencje handlowe  \nZgodnie z umową należą się kary umowne za czerwiec (jeden pełny punkt procentowy poniżej celu, 2% wartości faktury) i za lipiec (dwa pełne punkty, 4%). Za maj kara się nie należy, bo niedobór wyniósł mniej niż jeden pełny punkt procentowy. Kary zostaną rozliczone notami uznaniowymi. Dostawca prosił o odstąpienie od kar; Kovalo odmówiło."
+                },
+                {
+                  "doc_id": "CON-101",
+                  "chunk_id": "CON-101#ctx004",
+                  "text": "Streszczenie umowy z dostawcą: Mleczna Dolina (SUP-114) > Rozwiązanie umowy\n\n## Rozwiązanie umowy  \nKovalo może rozwiązać umowę z 60-dniowym okresem wypowiedzenia, jeśli OTIF przez trzy kolejne miesiące wynosi mniej niż 94%, albo ze skutkiem natychmiastowym w razie incydentu bezpieczeństwa żywności, za który odpowiada dostawca."
+                }
+              ],
+              "message": null
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          },
+          {
+            "call_id": "call_yABHDVKWxgfArUnWkR4TGGeE",
+            "parent_call_id": "call_arlj9bXoza0WDaFCiFqq1bx5",
+            "agent": "data_analyst",
+            "tool": "get_contract_terms",
+            "arguments": {
+              "supplier": "Mleczna Dolina"
+            },
+            "origin": "data",
+            "status": "ok",
+            "result": {
+              "status": "ok",
+              "supplier_id": "SUP-114",
+              "supplier": "Mleczna Dolina",
+              "source_doc_id": "CON-101",
+              "otif_target_pct": 97.0,
+              "penalty_clause": true,
+              "rate_per_full_point_pct": 2.0,
+              "cap_pct": 10.0,
+              "settlement": "nota uznaniowa do faktury za następny miesiąc",
+              "terms_version": "terms-v1",
+              "message": null
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          },
+          {
+            "call_id": "call_p73iVpj7edh3fnMtwIIeshZK",
+            "parent_call_id": "call_arlj9bXoza0WDaFCiFqq1bx5",
+            "agent": "data_analyst",
+            "tool": "get_supplier_otif",
+            "arguments": {
+              "supplier": "Mleczna Dolina",
+              "from_month": "2026-07",
+              "to_month": "2026-07"
+            },
+            "origin": "data",
+            "status": "ok",
+            "result": {
+              "status": "ok",
+              "supplier_id": "SUP-114",
+              "supplier": "Mleczna Dolina",
+              "requested": {
+                "from": "2026-07",
+                "to": "2026-07"
+              },
+              "observations": [
+                {
+                  "month": "2026-07",
+                  "otif_pct": 94.6
+                }
+              ],
+              "missing_months": [],
+              "complete": true,
+              "message": null
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          },
+          {
+            "call_id": "call_TOJHsbi8HciHH2b1x86IFZn0",
+            "parent_call_id": "call_arlj9bXoza0WDaFCiFqq1bx5",
+            "agent": "data_analyst",
+            "tool": "get_invoice_value",
+            "arguments": {
+              "supplier": "Mleczna Dolina",
+              "month": "2026-07"
+            },
+            "origin": "data",
+            "status": "ok",
+            "result": {
+              "status": "ok",
+              "supplier_id": "SUP-114",
+              "supplier": "Mleczna Dolina",
+              "month": "2026-07",
+              "invoiced_grosze": 18240000,
+              "currency": "PLN",
+              "message": null
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          },
+          {
+            "call_id": "call_PwTk6Bw4lotk9tFlItUroGPF",
+            "parent_call_id": "call_arlj9bXoza0WDaFCiFqq1bx5",
+            "agent": "data_analyst",
+            "tool": "calculate_otif_penalty",
+            "arguments": {
+              "otif_pct": 94.6,
+              "target_pct": 97.0,
+              "rate_per_full_point_pct": 2.0,
+              "cap_pct": 10.0,
+              "invoice_grosze": 18240000
+            },
+            "origin": "calculation",
+            "status": "ok",
+            "result": {
+              "status": "ok",
+              "otif_pct": 94.6,
+              "target_pct": 97.0,
+              "rate_per_full_point_pct": 2.0,
+              "cap_pct": 10.0,
+              "invoice_grosze": 18240000,
+              "shortfall_points": 2.4,
+              "full_points": 2,
+              "penalty_pct_uncapped": 4.0,
+              "penalty_pct": 4.0,
+              "penalty_grosze": 729600,
+              "currency": "PLN",
+              "note": "arytmetyka na podanych danych wejściowych; nie przesądza, czy kara się należy",
+              "message": null
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          }
+        ],
+        "steps": 19,
+        "input_tokens": 11418,
+        "output_tokens": 1926,
+        "seconds": 28.0
+      },
+      "score": {
+        "outcome": "answered",
+        "tool_coverage": 1.0,
+        "arguments_correct": true,
+        "answer_fact_coverage": 1.0,
+        "numeric_source_coverage": 1.0,
+        "uncovered_numbers": [],
+        "user_stated_numbers": [],
+        "approval_claim": false,
+        "tool_calls": 9,
+        "failed_calls": 0
+      }
+    },
+    {
+      "trace": {
+        "question_id": "P2",
+        "question": "Ile wynosi kara za OTIF Mlecznej Doliny za czerwiec 2026 r.?",
+        "answer": "Kara OTIF za **Mleczna Dolina** za **czerwiec 2026** wynosi **362 400 groszy (3 624,00 PLN)**.  \nŹródła liczb: **OTIF 95,2%** z `MTG-403` / `get_supplier_otif`, **próg 97%** i **2% za każdy pełny punkt** z `CON-101`, **faktura 18 120 000 groszy** z `get_invoice_value`, obliczenie z `calculate_otif_penalty`.\n\nBrakuje mi tylko potwierdzenia, czy ta kara ma być formalnie naliczona zgodnie z umową — dane wskazują wynik arytmetyczny, ale nie przesądzają decyzji.",
+        "status": "answered",
+        "error": null,
+        "events": [
+          {
+            "call_id": "call_6A7vuWAP67oKVk5smqvy2pKn",
+            "parent_call_id": null,
+            "agent": "supervisor",
+            "tool": "ask_documents_analyst",
+            "arguments": {
+              "task": "Znajdź w dokumentach wszystkie informacje potrzebne do ustalenia kary OTIF dla dostawcy Mleczna Dolina za czerwiec 2026 r. Podaj identyfikatory dokumentów i dokładne cytaty lub streszczenie zapisów o: nazwie dostawcy, okresie rozliczeniowym, zasadach OTIF/karach, ewentualnych progach, wyjątkach, oraz wszelkich dokumentach potwierdzających, że chodzi o czerwiec 2026 r. Jeśli są dokumenty po polsku lub innym języku, zachowaj ich identyfikatory i sens zapisów."
+            },
+            "origin": "worker_summary",
+            "status": "ok",
+            "result": {
+              "summary": "Poniżej zebrałem wszystkie znalezione informacje potrzebne do ustalenia kary OTIF dla dostawcy **Mleczna Dolina** za **czerwiec 2026 r.**, wraz z identyfikatorami dokumentów i wiernym sensem zapisów.\n\n## 1) Potwierdzenie nazwy dostawcy i okresu rozliczeniowego\n\n### Dokument: **MTG-403**\n- **Nazwa dostawcy:** „**Mleczna Dolina**”\n- **Okres odniesienia:** w tabeli wyników wskazano miesiąc **Czerwiec 2026**\n- **Cytat / zapis:**  \n  „**OTIF Mlecznej Doliny w ostatnich trzech miesiącach:**  \n  | Miesiąc | OTIF |  \n  |---|---|  \n  | Maj 2026 | 96,4% |  \n  | **Czerwiec 2026 | 95,2%** |  \n  | Lipiec 2026 | 94,6% |”\n\nTo jest bezpośrednie potwierdzenie, że chodzi o **czerwiec 2026 r.** i że dotyczy to **Mlecznej Doliny**.\n\n## 2) Zasady OTIF / kara umowna\n\n### Dokument: **CON-101**\n- **Zasada uruchamiająca karę:** jeśli miesięczny OTIF spadnie poniżej **97%**\n- **Wysokość kary / bonifikaty:** **2% wartości faktur z tego miesiąca za każdy pełny punkt procentowy poniżej celu**\n- **Limit maksymalny:** nie więcej niż **10% miesięcznej faktury**\n- **Sposób rozliczenia:** „**notą uznaniową do faktury za następny miesiąc**”\n- **Cytat / zapis:**  \n  „**Jeśli miesięczny wskaźnik OTIF spadnie poniżej 97%, Mleczna Dolina przyznaje Kovalo bonifikatę w wysokości 2% wartości faktur z tego miesiąca za każdy pełny punkt procentowy poniżej celu, nie więcej jednak niż 10% miesięcznej faktury. Kary rozlicza się notą uznaniową do faktury za następny miesiąc.**”\n\n## 3) Wskazanie, że kara ma być liczona dla Mlecznej Doliny\n\n### Dokument: **MTG-401**\n- **Znaczenie dokumentu:** potwierdza, że dla Mlecznej Doliny ma być przygotowane wyliczenie kary umownej na podstawie umowy.\n- **Cytat / zapis:**  \n  „**Kierownik działu zakupów przygotuje na sierpniowe spotkanie przeglądowe z dostawcą ocenę wyników Mlecznej Doliny wraz z wyliczeniem kary umownej należnej na podstawie umowy.**”\n\n## 4) Co z tego wynika dla czerwca 2026 r.\n\nNa podstawie znalezionych dokumentów:\n- **OTIF w czerwcu 2026 r. wyniósł 95,2%** — dokument **MTG-403**\n- próg umowny to **97%** — dokument **CON-101**\n- zatem czerwiec 2026 jest **poniżej progu**, więc **kara/bonifikata** zgodnie z umową ma zastosowanie — dokument **CON-101**\n- rozliczenie ma nastąpić **notą uznaniową do faktury za następny miesiąc** — dokument **CON-101**\n\n## 5) Wyjątki / progi / dodatkowe warunki\n\nW znalezionych fragmentach:\n- **jest próg 97%**\n- **jest limit 10% miesięcznej faktury**\n- **nie znaleziono w tych fragmentach dodatkowych wyjątków** (np. wyłączeń odpowiedzialności, siły wyższej, odrębnych progów dla konkretnych tras itp.)\n\nJedyny doprecyzowany kontekst operacyjny z MTG-403:\n- „**Większość uchybień dotyczy dostaw do Gdańska z 72-godzinnym czasem realizacji.**”\n- „**Dostawca tłumaczył opóźnienia brakiem pojazdów chłodniczych i nową trasą ze swojego zakładu na Mazowszu.**”\n\nTo są jednak **wyjaśnienia przyczyn**, a nie zapisane w umowie wyjątki od kary.\n\n## 6) Najważniejsze dokumenty do użycia przy ustalaniu kary za czerwiec 2026\n\n1. **CON-101** – zasady kary OTIF:\n   - próg **97%**\n   - stawka **2%**\n   - limit **10%**\n   - rozliczenie notą uznaniową\n\n2. **MTG-403** – potwierdzenie wyniku za **czerwiec 2026**:\n   - OTIF **95,2%** dla **Mlecznej Doliny**\n\n3. **MTG-401** – potwierdzenie, że przygotowywano wyliczenie kary umownej dla tego dostawcy.\n\nJeśli chcesz, mogę teraz policzyć **jak wygląda wyliczenie kary według zapisów CON-101 dla OTIF 95,2%**, ale do pełnej kwoty potrzebna byłaby jeszcze wartość faktur za czerwiec 2026 r. z odpowiedniego dokumentu."
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          },
+          {
+            "call_id": "call_HLbGcJ2hG5jfO1Dyyt3nbmSO",
+            "parent_call_id": null,
+            "agent": "supervisor",
+            "tool": "ask_data_analyst",
+            "arguments": {
+              "task": "Ustal karę OTIF dla dostawcy Mleczna Dolina za czerwiec 2026 r. Użyj dostępnych danych o warunkach umowy OTIF, wartości OTIF oraz ewentualnych fakturach/kwotach bazowych. Zwróć identyfikatory źródeł dla każdego parametru i pokaż obliczenie kary krok po kroku. Jeśli brakuje danych uniemożliwiających obliczenie, wskaż dokładnie czego brakuje."
+            },
+            "origin": "worker_summary",
+            "status": "ok",
+            "result": {
+              "summary": "Ustaliłem karę OTIF dla **Mleczna Dolina** za **2026-06**.\n\n## 1) Dane źródłowe\n\n### Warunki umowy\n- **Identyfikator umowy:** `CON-101`\n- **Id dostawcy:** `SUP-114`\n- **Cel OTIF:** **97,0%**\n- **Klauzula kary:** **tak** (`penalty_clause: true`)\n- **Stawka kary:** **2,0% miesięcznej faktury za każdy pełny punkt procentowy poniżej celu**\n- **Limit kary:** **10,0% miesięcznej faktury**\n- **Tryb rozliczenia:** `nota uznaniowa do faktury za następny miesiąc`\n\n### OTIF za miesiąc\n- **Miesiąc:** `2026-06`\n- **OTIF:** **95,2%**\n\n### Wartość faktury\n- **Miesiąc:** `2026-06`\n- **Kwota faktury:** **18 120 000 groszy** = **181 200,00 PLN**\n\n## 2) Sprawdzenie, czy kara w ogóle może być naliczona\nPonieważ `penalty_clause = true`, kara może być naliczana zgodnie z umową.\n\n## 3) Obliczenie kary krok po kroku\n\n### Krok 1: Niedobór względem celu\n- Cel: **97,0%**\n- OTIF rzeczywisty: **95,2%**\n- Różnica: **1,8 punktu procentowego**\n\n### Krok 2: Liczba pełnych punktów poniżej celu\nKara naliczana jest za **każdy pełny punkt procentowy** poniżej celu.\n\n- **1,8 pp** niedoboru = **1 pełny punkt procentowy**\n- Źródło obliczenia: `calculate_otif_penalty`\n\n### Krok 3: Stawka kary\n- **2,0% faktury** za 1 pełny punkt\n- Zatem kara procentowa bez limitu: **2,0%**\n\n### Krok 4: Sprawdzenie limitu\n- Limit: **10,0%**\n- Wyliczona kara: **2,0%**\n- Limit nie jest przekroczony\n\n### Krok 5: Kwota kary\n- Faktura: **18 120 000 groszy**\n- 2,0% z tej kwoty = **362 400 groszy**\n- To daje **3 624,00 PLN**\n\n## 4) Wynik końcowy\n**Kara OTIF za 2026-06 dla Mleczna Dolina wynosi: 362 400 groszy (3 624,00 PLN).**\n\n## 5) Źródła liczb\n- **Umowa:** `CON-101`  \n  - target OTIF: 97,0%\n  - penalty_clause: true\n  - rate: 2,0%\n  - cap: 10,0%\n- **OTIF:** `2026-06` → 95,2%\n- **Faktura:** `2026-06` → 18 120 000 groszy\n- **Obliczenie kary:** `calculate_otif_penalty` → 362 400 groszy\n\nJeśli chcesz, mogę też przygotować to w formie krótkiej noty do akceptacji księgowej."
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          },
+          {
+            "call_id": "call_A6RxwIjjno2xhMWwoTlMy5Av",
+            "parent_call_id": "call_6A7vuWAP67oKVk5smqvy2pKn",
+            "agent": "documents_analyst",
+            "tool": "search_documents",
+            "arguments": {
+              "question": "Mleczna Dolina OTIF kara czerwiec 2026 dostawca zasady progi wyjątki okres rozliczeniowy umowa polityka notatka raport"
+            },
+            "origin": "data",
+            "status": "ok",
+            "result": {
+              "status": "ok",
+              "query": "Mleczna Dolina OTIF kara czerwiec 2026 dostawca zasady progi wyjątki okres rozliczeniowy umowa polityka notatka raport",
+              "passages": [
+                {
+                  "doc_id": "MTG-403",
+                  "chunk_id": "MTG-403#ctx001",
+                  "text": "Spotkanie przeglądowe z dostawcą: Mleczna Dolina, 20 sierpnia 2026 r. > 1. Wyniki\n\n## 1. Wyniki  \nOTIF Mlecznej Doliny w ostatnich trzech miesiącach:  \n| Miesiąc | OTIF |\n|---|---|\n| Maj 2026 | 96,4% |\n| Czerwiec 2026 | 95,2% |\n| Lipiec 2026 | 94,6% |  \nW każdym z tych trzech miesięcy OTIF dostawcy był niższy od poziomu zapisanego w umowie. Większość uchybień dotyczy dostaw do Gdańska z 72-godzinnym czasem realizacji. Dostawca tłumaczył opóźnienia brakiem pojazdów chłodniczych i nową trasą ze swojego zakładu na Mazowszu."
+                },
+                {
+                  "doc_id": "CON-101",
+                  "chunk_id": "CON-101#ctx003",
+                  "text": "Streszczenie umowy z dostawcą: Mleczna Dolina (SUP-114) > Kara umowna\n\n## Kara umowna  \nJeśli miesięczny wskaźnik OTIF spadnie poniżej 97%, Mleczna Dolina przyznaje Kovalo bonifikatę w wysokości 2% wartości faktur z tego miesiąca za każdy pełny punkt procentowy poniżej celu, nie więcej jednak niż 10% miesięcznej faktury. Kary rozlicza się notą uznaniową do faktury za następny miesiąc."
+                },
+                {
+                  "doc_id": "MTG-401",
+                  "chunk_id": "MTG-401#ctx004",
+                  "text": "Notatka z posiedzenia zarządu: 14 lipca 2026 r. > 4. Dostawca nabiału\n\n## 4. Dostawca nabiału  \nKierownik działu zakupów przygotuje na sierpniowe spotkanie przeglądowe z dostawcą ocenę wyników Mlecznej Doliny wraz z wyliczeniem kary umownej należnej na podstawie umowy."
+                }
+              ],
+              "message": null
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          },
+          {
+            "call_id": "call_v6ZiXYFycSKYmVQ1DVYFik4f",
+            "parent_call_id": "call_HLbGcJ2hG5jfO1Dyyt3nbmSO",
+            "agent": "data_analyst",
+            "tool": "get_contract_terms",
+            "arguments": {
+              "supplier": "Mleczna Dolina"
+            },
+            "origin": "data",
+            "status": "ok",
+            "result": {
+              "status": "ok",
+              "supplier_id": "SUP-114",
+              "supplier": "Mleczna Dolina",
+              "source_doc_id": "CON-101",
+              "otif_target_pct": 97.0,
+              "penalty_clause": true,
+              "rate_per_full_point_pct": 2.0,
+              "cap_pct": 10.0,
+              "settlement": "nota uznaniowa do faktury za następny miesiąc",
+              "terms_version": "terms-v1",
+              "message": null
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          },
+          {
+            "call_id": "call_Q4gz5foYcjJr9Ye5foQEe4Is",
+            "parent_call_id": "call_HLbGcJ2hG5jfO1Dyyt3nbmSO",
+            "agent": "data_analyst",
+            "tool": "get_supplier_otif",
+            "arguments": {
+              "supplier": "Mleczna Dolina",
+              "from_month": "2026-06",
+              "to_month": "2026-06"
+            },
+            "origin": "data",
+            "status": "ok",
+            "result": {
+              "status": "ok",
+              "supplier_id": "SUP-114",
+              "supplier": "Mleczna Dolina",
+              "requested": {
+                "from": "2026-06",
+                "to": "2026-06"
+              },
+              "observations": [
+                {
+                  "month": "2026-06",
+                  "otif_pct": 95.2
+                }
+              ],
+              "missing_months": [],
+              "complete": true,
+              "message": null
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          },
+          {
+            "call_id": "call_mLVhGbKmAo7eO7ltx6UGuWxf",
+            "parent_call_id": "call_HLbGcJ2hG5jfO1Dyyt3nbmSO",
+            "agent": "data_analyst",
+            "tool": "get_invoice_value",
+            "arguments": {
+              "supplier": "Mleczna Dolina",
+              "month": "2026-06"
+            },
+            "origin": "data",
+            "status": "ok",
+            "result": {
+              "status": "ok",
+              "supplier_id": "SUP-114",
+              "supplier": "Mleczna Dolina",
+              "month": "2026-06",
+              "invoiced_grosze": 18120000,
+              "currency": "PLN",
+              "message": null
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          },
+          {
+            "call_id": "call_7R9EdyxqYSKq140IRc1D1j5H",
+            "parent_call_id": "call_HLbGcJ2hG5jfO1Dyyt3nbmSO",
+            "agent": "data_analyst",
+            "tool": "calculate_otif_penalty",
+            "arguments": {
+              "otif_pct": 95.2,
+              "target_pct": 97,
+              "rate_per_full_point_pct": 2,
+              "cap_pct": 10,
+              "invoice_grosze": 18120000
+            },
+            "origin": "calculation",
+            "status": "ok",
+            "result": {
+              "status": "ok",
+              "otif_pct": 95.2,
+              "target_pct": 97.0,
+              "rate_per_full_point_pct": 2.0,
+              "cap_pct": 10.0,
+              "invoice_grosze": 18120000,
+              "shortfall_points": 1.8,
+              "full_points": 1,
+              "penalty_pct_uncapped": 2.0,
+              "penalty_pct": 2.0,
+              "penalty_grosze": 362400,
+              "currency": "PLN",
+              "note": "arytmetyka na podanych danych wejściowych; nie przesądza, czy kara się należy",
+              "message": null
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          }
+        ],
+        "steps": 14,
+        "input_tokens": 10098,
+        "output_tokens": 2660,
+        "seconds": 24.95
+      },
+      "score": {
+        "outcome": "answered",
+        "tool_coverage": 1.0,
+        "arguments_correct": true,
+        "answer_fact_coverage": 1.0,
+        "numeric_source_coverage": 1.0,
+        "uncovered_numbers": [],
+        "user_stated_numbers": [],
+        "approval_claim": false,
+        "tool_calls": 7,
+        "failed_calls": 0
+      }
+    },
+    {
+      "trace": {
+        "question_id": "P3",
+        "question": "Czy za maj 2026 r. należy się od Mlecznej Doliny kara za OTIF?",
+        "answer": "Nie. Dla maja 2026 **kara OTIF nie wychodzi**.\n\n- **Umowa:** `CON-101` / dostawca `SUP-114` („Mleczna Dolina”)  \n  - próg OTIF: **97,0%** — źródło: `CON-101`\n  - kara: **2,0% wartości faktury za każdy pełny punkt procentowy poniżej celu** — źródło: `CON-101`\n  - rozliczenie: **nota uznaniowa do faktury za następny miesiąc** — źródło: `CON-101`\n\n- **OTIF maj 2026:** **96,4%** — źródło: `SUP-114` (`get_supplier_otif`)\n- **Faktura maj 2026:** **17 650 000 groszy / 176 500,00 PLN** — źródło: `SUP-114` (`get_invoice_value`)\n\n- **Obliczenie kary:**  \n  - niedobór do progu: **0,6 p.p.** — źródło: obliczenie na bazie `CON-101` i `SUP-114`\n  - pełne punkty poniżej progu: **0** — źródło: `calculate_otif_penalty`\n  - kara: **0 groszy / 0,00 PLN** — źródło: `calculate_otif_penalty`\n\nBrakuje mi tylko **osobnej definicji OTIF/pominięć**, jeśli potrzebujesz pełnej interpretacji operacyjnej; do samego wyniku kary nie była potrzebna.",
+        "status": "answered",
+        "error": null,
+        "events": [
+          {
+            "call_id": "call_QIlKvuEeTplmRCVLKjS0irqr",
+            "parent_call_id": null,
+            "agent": "supervisor",
+            "tool": "ask_documents_analyst",
+            "arguments": {
+              "task": "Ustal, czy dla dostawcy/klienta 'Mleczna Dolina' istnieje w dokumentach umowa lub aneks regulujący OTIF za maj 2026 r. Znajdź dokumenty źródłowe, ich identyfikatory, oraz zacytuj dokładnie zapisy mówiące o okresie obowiązywania, sposobie liczenia OTIF, progach/pominięciach i ewentualnej karze lub rabacie. Jeśli w dokumentach jest wskazany miesiąc maj 2026 lub rozliczenie miesięczne, podaj to. Nie wyciągaj wniosków finansowych."
+            },
+            "origin": "worker_summary",
+            "status": "ok",
+            "result": {
+              "summary": "Tak — w dokumentach jest umowa dotycząca **Mlecznej Doliny** oraz zapis o **miesięcznym OTIF**, ale **nie znalazłem osobnego aneksu** regulującego OTIF dla maja 2026 r. Z dokumentów wynika, że obowiązuje umowa SUP-114 i obejmuje ona maj 2026 r. w ramach okresu jej obowiązywania.\n\n## Dokumenty źródłowe\n\n### 1) **CON-101** — Streszczenie umowy z dostawcą: Mleczna Dolina (SUP-114)\nNajważniejsze cytaty:\n\n- **Okres obowiązywania**\n  > „Umowa obowiązuje od 1 kwietnia 2025 r. do 31 marca 2027 r. i przedłuża się automatycznie o 12 miesięcy, chyba że jedna ze stron wypowie ją najpóźniej na 90 dni przed jej wygaśnięciem.”\n\n- **OTIF / próg i rozliczenie miesięczne**\n  > „Jeśli miesięczny wskaźnik OTIF spadnie poniżej 97%, Mleczna Dolina przyznaje Kovalo bonifikatę w wysokości 2% wartości faktur z tego miesiąca za każdy pełny punkt procentowy poniżej celu, nie więcej jednak niż 10% miesięcznej faktury. Kary rozlicza się notą uznaniową do faktury za następny miesiąc.”\n\n- **Wolumen / cena powiązana z umową**\n  > „Kovalo zobowiązuje się kupić towar za co najmniej 2,4 mln PLN w każdym roku umownym.”\n\n## Dokument pomocniczy potwierdzający maj 2026\n\n### 2) **MTG-403** — Spotkanie przeglądowe z dostawcą: Mleczna Dolina, 20 sierpnia 2026 r.\nCytat:\n\n> „OTIF Mlecznej Doliny w ostatnich trzech miesiącach:  \n> | Miesiąc | OTIF |  \n> |---|---|  \n> | Maj 2026 | 96,4% |  \n> | Czerwiec 2026 | 95,2% |  \n> | Lipiec 2026 | 94,6% |  \n> W każdym z tych trzech miesięcy OTIF dostawcy był niższy od poziomu zapisanego w umowie.”\n\n## Co da się ustalić z dokumentów\n- **Tak, maj 2026 jest objęty umową** — wynika to z okresu obowiązywania umowy z CON-101.\n- **OTIF jest liczony miesięcznie** — zapis mówi o „miesięcznym wskaźniku OTIF”.\n- **Próg**: poniżej **97%**.\n- **Sankcja/korzyść kontraktowa**: wskazana jest **bonifikata** i rozliczenie „notą uznaniową do faktury za następny miesiąc”.\n- **Nie znalazłem w przytoczonych dokumentach dokładnej definicji sposobu liczenia OTIF ani listy pominięć/progów operacyjnych** (np. wyłączeń dla konkretnych typów dostaw, opóźnień czy reklamacji). Dokumenty, które dostałem, zawierają tylko powyższy zapis o progu i miesięcznym rozliczeniu.\n\nJeśli chcesz, mogę teraz zrobić jeszcze jedno wyszukanie stricte pod:\n1. definicję OTIF,  \n2. wyjątki/pominięcia,  \n3. czy istnieje osobny aneks do SUP-114."
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          },
+          {
+            "call_id": "call_RsNBsALVQZywZSVEBs7lixQ5",
+            "parent_call_id": null,
+            "agent": "supervisor",
+            "tool": "ask_data_analyst",
+            "arguments": {
+              "task": "Sprawdź, czy dla Mlecznej Doliny za maj 2026 należałaby się kara OTIF. Ustal z umowy warunki OTIF, wymagany próg, sposób rozliczania, oraz pobierz wynik OTIF dla maja 2026. Jeśli istnieje, pobierz także wartość faktury/bazy do obliczenia kary i oblicz karę zgodnie z umową. Podaj wszystkie identyfikatory źródeł danych i przy każdej liczbie wskaż źródło."
+            },
+            "origin": "worker_summary",
+            "status": "ok",
+            "result": {
+              "summary": "Sprawdziłem Mleczną Dolinę dla **maja 2026**.\n\n### 1) Warunki umowy OTIF\n- **Źródło umowy:** `CON-101`\n- **Dostawca / identyfikator:** `SUP-114` / Mleczna Dolina\n- **Próg OTIF:** **97.0%**  \n  - źródło: `CON-101`\n- **Klauzula kary umownej:** **tak** (`penalty_clause = true`)  \n  - źródło: `CON-101`\n- **Stawka kary:** **2.0% miesięcznej faktury za każdy pełny punkt procentowy poniżej progu**  \n  - źródło: `CON-101`\n- **Limit kary:** **10.0% miesięcznej faktury**  \n  - źródło: `CON-101`\n- **Sposób rozliczania:** **nota uznaniowa do faktury za następny miesiąc**  \n  - źródło: `CON-101`\n\n### 2) OTIF za maj 2026\n- **OTIF:** **96.4%**  \n  - źródło danych: `SUP-114`, wynik z `get_supplier_otif` dla `2026-05`\n\n### 3) Faktura / baza do obliczenia\n- **Wartość faktury za maj 2026:** **17 650 000 groszy** = **176 500.00 PLN**  \n  - źródło danych: `SUP-114`, wynik z `get_invoice_value` dla `2026-05`\n\n### 4) Czy należałaby się kara?\nZgodnie z umową kara liczy się **za każdy pełny punkt procentowy** poniżej celu.\n\n- **Różnica do progu:** 97.0% - 96.4% = **0.6 p.p.**  \n  - źródło: obliczenie na podstawie `CON-101` i OTIF `SUP-114`\n- **Pełne punkty poniżej progu:** **0**  \n  - źródło: obliczenie przez `calculate_otif_penalty`\n- **Kara przed limitem:** **0.0%**\n- **Kara po limicie:** **0.0%**\n- **Kara pieniężna:** **0 groszy** = **0.00 PLN**  \n  - źródło: obliczenie przez `calculate_otif_penalty` na bazie faktury `17 650 000 groszy`\n\n### Wniosek\n**Nie nalicza się kara OTIF za maj 2026**, ponieważ OTIF był poniżej celu tylko o **0.6 p.p.**, a umowa przewiduje karę wyłącznie za **pełne** punkty procentowe poniżej progu.  \n\nJeśli chcesz, mogę też podać to w formie krótkiej notatki do maila lub tabeli."
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          },
+          {
+            "call_id": "call_nxlsIfkIaCR4l0iKgbrqP6Xs",
+            "parent_call_id": null,
+            "agent": "supervisor",
+            "tool": "ask_policy_checker",
+            "arguments": {
+              "task": "Sprawdź politykę akceptacji rabatu/knock-on dla OTIF w kontekście Mlecznej Doliny: kto musi zatwierdzić ewentualny rabat/kare, jakie są progi i wyjątki. Podaj źródło polityki i dokładne wymagania decyzyjne. Nie oceniaj, czy kara należy się merytorycznie."
+            },
+            "origin": "worker_summary",
+            "status": "ok",
+            "result": {
+              "summary": "Nie mogę wiarygodnie podać tej polityki dla **OTIF / Mlecznej Doliny** na podstawie dostępnych mi danych, bo jedyny dostępny mechanizm pozwala sprawdzić wyłącznie **politykę rabatową POL-001** i nie zawiera treści o OTIF, knock-on, karach ani nazwie klienta.\n\nCo mogę potwierdzić z dostępnej polityki rabatowej:\n- **Źródło polityki:** `POL-001` (wersja/case: `course-v1`)\n- **Charakter odpowiedzi:** to wyłącznie informacja, **niczego nie zatwierdza**\n- **Minimalne wymagania decyzyjne z tej polityki:** zależą od:\n  - poziomu rabatu,\n  - marży po rabacie,\n  - oraz flag wyjątków: `clearance`, `strategic_account`, `competitor_offer`, `contractual_volume_rebate`\n\nZ uzyskanego wyniku:\n- dla **0% rabatu** polityka wskazuje: **Przedstawiciel handlowy**\n- uzasadnienie: rabat 0% mieści się w przedziale do 5%\n- marża po rabacie nie była podana, więc **nie sprawdzono minimalnej marży**\n\nJeśli chcesz, mogę:\n1. sprawdzić **konkretne progi akceptacji rabatu** dla dowolnego rabatu i marży w POL-001, albo  \n2. jeśli wkleisz treść polityki OTIF/knock-on albo podasz jej identyfikator, pomogę ją rozpisać w formie: **kto akceptuje, progi, wyjątki, źródło, wymagania decyzyjne**."
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          },
+          {
+            "call_id": "call_nch2k27AM7uP5npn56sz9WkI",
+            "parent_call_id": "call_nxlsIfkIaCR4l0iKgbrqP6Xs",
+            "agent": "policy_checker",
+            "tool": "check_discount_policy",
+            "arguments": {
+              "discount_pct": 0,
+              "margin_after_pct": null,
+              "clearance": false,
+              "strategic_account": false,
+              "competitor_offer": false,
+              "contractual_volume_rebate": false
+            },
+            "origin": "calculation",
+            "status": "ok",
+            "result": {
+              "status": "ok",
+              "approvers": [
+                "Przedstawiciel handlowy"
+              ],
+              "reasons": [
+                "rabat 0% mieści się w przedziale do 5%; zatwierdza: Przedstawiciel handlowy (tabela POL-001)",
+                "nie podano marży po rabacie: minimalnej marży nie sprawdzono"
+              ],
+              "version": "course-v1",
+              "margin_checked": false,
+              "partial": true,
+              "note": "tylko informacja: to sprawdzenie niczego nie zatwierdza; wnioski o akceptację przechodzą przez workflow akceptacji (Miniprojekt 3)",
+              "message": null
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          },
+          {
+            "call_id": "call_JETrYnfCZXlnRNQVNyktP0dU",
+            "parent_call_id": "call_RsNBsALVQZywZSVEBs7lixQ5",
+            "agent": "data_analyst",
+            "tool": "get_contract_terms",
+            "arguments": {
+              "supplier": "Mleczna Dolina"
+            },
+            "origin": "data",
+            "status": "ok",
+            "result": {
+              "status": "ok",
+              "supplier_id": "SUP-114",
+              "supplier": "Mleczna Dolina",
+              "source_doc_id": "CON-101",
+              "otif_target_pct": 97.0,
+              "penalty_clause": true,
+              "rate_per_full_point_pct": 2.0,
+              "cap_pct": 10.0,
+              "settlement": "nota uznaniowa do faktury za następny miesiąc",
+              "terms_version": "terms-v1",
+              "message": null
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          },
+          {
+            "call_id": "call_E0FRSnLFLxd6OlDBia52ypjH",
+            "parent_call_id": "call_RsNBsALVQZywZSVEBs7lixQ5",
+            "agent": "data_analyst",
+            "tool": "get_supplier_otif",
+            "arguments": {
+              "supplier": "Mleczna Dolina",
+              "from_month": "2026-05",
+              "to_month": "2026-05"
+            },
+            "origin": "data",
+            "status": "ok",
+            "result": {
+              "status": "ok",
+              "supplier_id": "SUP-114",
+              "supplier": "Mleczna Dolina",
+              "requested": {
+                "from": "2026-05",
+                "to": "2026-05"
+              },
+              "observations": [
+                {
+                  "month": "2026-05",
+                  "otif_pct": 96.4
+                }
+              ],
+              "missing_months": [],
+              "complete": true,
+              "message": null
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          },
+          {
+            "call_id": "call_wpoxhAArpJI1sqHcfIXvFbx6",
+            "parent_call_id": "call_RsNBsALVQZywZSVEBs7lixQ5",
+            "agent": "data_analyst",
+            "tool": "get_invoice_value",
+            "arguments": {
+              "supplier": "Mleczna Dolina",
+              "month": "2026-05"
+            },
+            "origin": "data",
+            "status": "ok",
+            "result": {
+              "status": "ok",
+              "supplier_id": "SUP-114",
+              "supplier": "Mleczna Dolina",
+              "month": "2026-05",
+              "invoiced_grosze": 17650000,
+              "currency": "PLN",
+              "message": null
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          },
+          {
+            "call_id": "call_Rc5H0tNEnkfvgWxBRl3ftjcZ",
+            "parent_call_id": "call_RsNBsALVQZywZSVEBs7lixQ5",
+            "agent": "data_analyst",
+            "tool": "calculate_otif_penalty",
+            "arguments": {
+              "otif_pct": 96.4,
+              "target_pct": 97.0,
+              "rate_per_full_point_pct": 2.0,
+              "cap_pct": 10.0,
+              "invoice_grosze": 17650000
+            },
+            "origin": "calculation",
+            "status": "ok",
+            "result": {
+              "status": "ok",
+              "otif_pct": 96.4,
+              "target_pct": 97.0,
+              "rate_per_full_point_pct": 2.0,
+              "cap_pct": 10.0,
+              "invoice_grosze": 17650000,
+              "shortfall_points": 0.6,
+              "full_points": 0,
+              "penalty_pct_uncapped": 0.0,
+              "penalty_pct": 0.0,
+              "penalty_grosze": 0,
+              "currency": "PLN",
+              "note": "arytmetyka na podanych danych wejściowych; nie przesądza, czy kara się należy",
+              "message": null
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          },
+          {
+            "call_id": "call_YGrpdOd1FLGYEr1ZbjtegtoN",
+            "parent_call_id": "call_QIlKvuEeTplmRCVLKjS0irqr",
+            "agent": "documents_analyst",
+            "tool": "search_documents",
+            "arguments": {
+              "question": "Czy dla dostawcy/klienta 'Mleczna Dolina' istnieje w dokumentach umowa lub aneks regulujący OTIF za maj 2026 r.? Szukam dokumentów źródłowych, ich identyfikatorów, oraz dokładnych zapisów o okresie obowiązywania, sposobie liczenia OTIF, progach/pominięciach i ewentualnej karze lub rabacie. Jeśli jest wskazany miesiąc maj 2026 lub rozliczenie miesięczne, podaj to. Nie wyciągaj wniosków finansowych."
+            },
+            "origin": "data",
+            "status": "ok",
+            "result": {
+              "status": "ok",
+              "query": "Czy dla dostawcy/klienta 'Mleczna Dolina' istnieje w dokumentach umowa lub aneks regulujący OTIF za maj 2026 r.? Szukam dokumentów źródłowych, ich identyfikatorów, oraz dokładnych zapisów o okresie obowiązywania, sposobie liczenia OTIF, progach/pominięciach i ewentualnej karze lub rabacie. Jeśli jest wskazany miesiąc maj 2026 lub rozliczenie miesięczne, podaj to. Nie wyciągaj wniosków finansowych.",
+              "passages": [
+                {
+                  "doc_id": "MTG-403",
+                  "chunk_id": "MTG-403#ctx001",
+                  "text": "Spotkanie przeglądowe z dostawcą: Mleczna Dolina, 20 sierpnia 2026 r. > 1. Wyniki\n\n## 1. Wyniki  \nOTIF Mlecznej Doliny w ostatnich trzech miesiącach:  \n| Miesiąc | OTIF |\n|---|---|\n| Maj 2026 | 96,4% |\n| Czerwiec 2026 | 95,2% |\n| Lipiec 2026 | 94,6% |  \nW każdym z tych trzech miesięcy OTIF dostawcy był niższy od poziomu zapisanego w umowie. Większość uchybień dotyczy dostaw do Gdańska z 72-godzinnym czasem realizacji. Dostawca tłumaczył opóźnienia brakiem pojazdów chłodniczych i nową trasą ze swojego zakładu na Mazowszu."
+                },
+                {
+                  "doc_id": "CON-101",
+                  "chunk_id": "CON-101#ctx003",
+                  "text": "Streszczenie umowy z dostawcą: Mleczna Dolina (SUP-114) > Kara umowna\n\n## Kara umowna  \nJeśli miesięczny wskaźnik OTIF spadnie poniżej 97%, Mleczna Dolina przyznaje Kovalo bonifikatę w wysokości 2% wartości faktur z tego miesiąca za każdy pełny punkt procentowy poniżej celu, nie więcej jednak niż 10% miesięcznej faktury. Kary rozlicza się notą uznaniową do faktury za następny miesiąc."
+                },
+                {
+                  "doc_id": "CON-101",
+                  "chunk_id": "CON-101#ctx000",
+                  "text": "Streszczenie umowy z dostawcą: Mleczna Dolina (SUP-114) > Strony i okres obowiązywania\n\n# Streszczenie umowy z dostawcą: Mleczna Dolina (SUP-114)  \n## Strony i okres obowiązywania  \nDostawca: Spółdzielnia Mleczarska Mleczna Dolina, numer dostawcy SUP-114. Kategoria: nabiał (mleko, jogurty, masło, sery). Umowa obowiązuje od 1 kwietnia 2025 r. do 31 marca 2027 r. i przedłuża się automatycznie o 12 miesięcy, chyba że jedna ze stron wypowie ją najpóźniej na 90 dni przed jej wygaśnięciem."
+                }
+              ],
+              "message": null
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          },
+          {
+            "call_id": "call_CLfVeIdYG8HFzuuTEIULu3Sy",
+            "parent_call_id": "call_QIlKvuEeTplmRCVLKjS0irqr",
+            "agent": "documents_analyst",
+            "tool": "search_documents",
+            "arguments": {
+              "question": "Mleczna Dolina OTIF sposób liczenia, progi, pominięcia, definicja miesięcznego wskaźnika, rozliczenie miesięczne, maj 2026. Szukam dokładnych cytatów z umowy lub aneksu."
+            },
+            "origin": "data",
+            "status": "ok",
+            "result": {
+              "status": "ok",
+              "query": "Mleczna Dolina OTIF sposób liczenia, progi, pominięcia, definicja miesięcznego wskaźnika, rozliczenie miesięczne, maj 2026. Szukam dokładnych cytatów z umowy lub aneksu.",
+              "passages": [
+                {
+                  "doc_id": "CON-101",
+                  "chunk_id": "CON-101#ctx003",
+                  "text": "Streszczenie umowy z dostawcą: Mleczna Dolina (SUP-114) > Kara umowna\n\n## Kara umowna  \nJeśli miesięczny wskaźnik OTIF spadnie poniżej 97%, Mleczna Dolina przyznaje Kovalo bonifikatę w wysokości 2% wartości faktur z tego miesiąca za każdy pełny punkt procentowy poniżej celu, nie więcej jednak niż 10% miesięcznej faktury. Kary rozlicza się notą uznaniową do faktury za następny miesiąc."
+                },
+                {
+                  "doc_id": "MTG-403",
+                  "chunk_id": "MTG-403#ctx001",
+                  "text": "Spotkanie przeglądowe z dostawcą: Mleczna Dolina, 20 sierpnia 2026 r. > 1. Wyniki\n\n## 1. Wyniki  \nOTIF Mlecznej Doliny w ostatnich trzech miesiącach:  \n| Miesiąc | OTIF |\n|---|---|\n| Maj 2026 | 96,4% |\n| Czerwiec 2026 | 95,2% |\n| Lipiec 2026 | 94,6% |  \nW każdym z tych trzech miesięcy OTIF dostawcy był niższy od poziomu zapisanego w umowie. Większość uchybień dotyczy dostaw do Gdańska z 72-godzinnym czasem realizacji. Dostawca tłumaczył opóźnienia brakiem pojazdów chłodniczych i nową trasą ze swojego zakładu na Mazowszu."
+                },
+                {
+                  "doc_id": "CON-101",
+                  "chunk_id": "CON-101#ctx001",
+                  "text": "Streszczenie umowy z dostawcą: Mleczna Dolina (SUP-114) > Wolumen i ceny\n\n## Wolumen i ceny  \nKovalo zobowiązuje się kupić towar za co najmniej 2,4 mln PLN w każdym roku umownym. Ceny są stałe w danym kwartale, a między kwartałami mogą zmienić się najwyżej o 3%, z wyjątkiem gwałtownych zmian cen mleka surowego, udokumentowanych krajowym indeksem cen mleka."
+                }
+              ],
+              "message": null
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          },
+          {
+            "call_id": "call_jzdHRRYMzVy1GhvMpvvKwyIP",
+            "parent_call_id": "call_QIlKvuEeTplmRCVLKjS0irqr",
+            "agent": "documents_analyst",
+            "tool": "search_documents",
+            "arguments": {
+              "question": "Mleczna Dolina aneks OTIF maj 2026 rabat kara bonifikata progi pominięcia okres obowiązywania rozliczenie miesięczne. Szukam źródłowych dokumentów i cytatów."
+            },
+            "origin": "data",
+            "status": "ok",
+            "result": {
+              "status": "ok",
+              "query": "Mleczna Dolina aneks OTIF maj 2026 rabat kara bonifikata progi pominięcia okres obowiązywania rozliczenie miesięczne. Szukam źródłowych dokumentów i cytatów.",
+              "passages": [
+                {
+                  "doc_id": "CON-101",
+                  "chunk_id": "CON-101#ctx003",
+                  "text": "Streszczenie umowy z dostawcą: Mleczna Dolina (SUP-114) > Kara umowna\n\n## Kara umowna  \nJeśli miesięczny wskaźnik OTIF spadnie poniżej 97%, Mleczna Dolina przyznaje Kovalo bonifikatę w wysokości 2% wartości faktur z tego miesiąca za każdy pełny punkt procentowy poniżej celu, nie więcej jednak niż 10% miesięcznej faktury. Kary rozlicza się notą uznaniową do faktury za następny miesiąc."
+                },
+                {
+                  "doc_id": "MTG-403",
+                  "chunk_id": "MTG-403#ctx001",
+                  "text": "Spotkanie przeglądowe z dostawcą: Mleczna Dolina, 20 sierpnia 2026 r. > 1. Wyniki\n\n## 1. Wyniki  \nOTIF Mlecznej Doliny w ostatnich trzech miesiącach:  \n| Miesiąc | OTIF |\n|---|---|\n| Maj 2026 | 96,4% |\n| Czerwiec 2026 | 95,2% |\n| Lipiec 2026 | 94,6% |  \nW każdym z tych trzech miesięcy OTIF dostawcy był niższy od poziomu zapisanego w umowie. Większość uchybień dotyczy dostaw do Gdańska z 72-godzinnym czasem realizacji. Dostawca tłumaczył opóźnienia brakiem pojazdów chłodniczych i nową trasą ze swojego zakładu na Mazowszu."
+                },
+                {
+                  "doc_id": "CON-101",
+                  "chunk_id": "CON-101#ctx001",
+                  "text": "Streszczenie umowy z dostawcą: Mleczna Dolina (SUP-114) > Wolumen i ceny\n\n## Wolumen i ceny  \nKovalo zobowiązuje się kupić towar za co najmniej 2,4 mln PLN w każdym roku umownym. Ceny są stałe w danym kwartale, a między kwartałami mogą zmienić się najwyżej o 3%, z wyjątkiem gwałtownych zmian cen mleka surowego, udokumentowanych krajowym indeksem cen mleka."
+                }
+              ],
+              "message": null
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          }
+        ],
+        "steps": 21,
+        "input_tokens": 15961,
+        "output_tokens": 3069,
+        "seconds": 27.68
+      },
+      "score": {
+        "outcome": "answered",
+        "tool_coverage": 1.0,
+        "arguments_correct": true,
+        "answer_fact_coverage": 1.0,
+        "numeric_source_coverage": 1.0,
+        "uncovered_numbers": [],
+        "user_stated_numbers": [],
+        "approval_claim": false,
+        "tool_calls": 11,
+        "failed_calls": 0
+      }
+    },
+    {
+      "trace": {
+        "question_id": "T1",
+        "question": "Czy na koniec września 2026 r. Kovalo może rozwiązać umowę z Mleczną Doliną z powodu jej OTIF?",
+        "answer": "Tak — według **CON-101** Kovalo może rozwiązać umowę, jeśli **OTIF przez 3 kolejne miesiące spadnie poniżej 94%**; obowiązuje **60-dniowe wypowiedzenie**. Umowa trwa **1.04.2025–31.03.2027** i odnawia się automatycznie, jeśli brak wypowiedzenia **90 dni przed końcem**.\n\nDane OTIF dla **SUP-114 / Mleczna Dolina**:\n- **2026-07: 94,6%** — źródło: **get_supplier_otif**\n- **2026-08: 93,8%** — źródło: **get_supplier_otif**\n- **2026-09: 93,5%** — źródło: **get_supplier_otif**\n\nBrakuje danych za **2026-01, 2026-02, 2026-03** — źródło: **get_supplier_otif**.\n\nNa podstawie samych dostępnych danych **nie da się potwierdzić**, że na **koniec września 2026 r.** spełniono warunek **3 kolejnych miesięcy poniżej 94%**. Protokół **MTG-403** potwierdza tylko, że w **maju–lipcu 2026** OTIF wynosił **96,4% / 95,2% / 94,6%** — źródło: **MTG-403**.",
+        "status": "answered",
+        "error": null,
+        "events": [
+          {
+            "call_id": "call_1TX1xzBISo2fUAUoYBpzlaZi",
+            "parent_call_id": null,
+            "agent": "supervisor",
+            "tool": "ask_documents_analyst",
+            "arguments": {
+              "task": "Sprawdź w dokumentach dotyczącym relacji z dostawcą 'Mleczna Dolina', czy istnieje umowa, aneks lub polityka, która reguluje możliwość rozwiązania umowy z powodu OTIF na koniec września 2026 r. Podaj: identyfikatory dokumentów, dokładne postanowienia o OTIF/terminacji, okres obowiązywania, progi lub warunki rozwiązania oraz wszelkie daty graniczne. Jeśli w dokumentach nie ma takiej informacji, napisz to wprost."
+            },
+            "origin": "worker_summary",
+            "status": "ok",
+            "result": {
+              "summary": "Tak — w dokumentach dotyczących **Mlecznej Doliny (SUP-114)** jest dokument regulujący możliwość rozwiązania umowy z powodu OTIF.\n\n## Dokumenty i postanowienia\n\n### 1) **CON-101**\nŹródło: streszczenie umowy z dostawcą **Mleczna Dolina (SUP-114)**\n\n**Okres obowiązywania:**\n- umowa obowiązuje **od 1 kwietnia 2025 r. do 31 marca 2027 r.**\n- umowa **przedłuża się automatycznie o 12 miesięcy**, chyba że jedna ze stron wypowie ją **najpóźniej na 90 dni przed wygaśnięciem**\n\n**Postanowienie o OTIF i terminacji:**\n- Kovalo może **rozwiązać umowę z 60-dniowym okresem wypowiedzenia**, jeśli **OTIF przez trzy kolejne miesiące wynosi mniej niż 94%**\n- umowa może być rozwiązana także **ze skutkiem natychmiastowym** w razie **incydentu bezpieczeństwa żywności**, za który odpowiada dostawca\n\n**Próg / warunek rozwiązania:**\n- **OTIF < 94% przez 3 kolejne miesiące**\n\n**Daty graniczne:**\n- data końca podstawowego okresu umowy: **31 marca 2027 r.**\n- data graniczna dla wypowiedzenia przed wygaśnięciem: **90 dni przed wygaśnięciem**\n- termin wypowiedzenia przy OTIF: **60 dni**\n\n## Czy jest informacja o rozwiązaniu „na koniec września 2026 r.”?\nW dostępnych dokumentach **nie ma odrębnej klauzuli, która wprost wskazywałaby rozwiązanie na koniec września 2026 r.**. Jest natomiast ogólna klauzula OTIF z progiem **94% przez 3 kolejne miesiące** i **60-dniowym wypowiedzeniem**, która mogłaby mieć znaczenie dla oceny na koniec września 2026 r.\n\n## Dodatkowy dokument\n### 2) **MTG-403**\nSpotkanie z 20 sierpnia 2026 r. pokazuje, że OTIF w ostatnich trzech miesiącach wynosił:\n- maj 2026: **96,4%**\n- czerwiec 2026: **95,2%**\n- lipiec 2026: **94,6%**\n\nJednocześnie zapisano, że:\n- w każdym z tych trzech miesięcy OTIF był **niższy od poziomu zapisanego w umowie**\n\nTo potwierdza, że temat OTIF był omawiany, ale sam protokół nie zawiera nowej klauzuli terminacyjnej.\n\nJeśli chcesz, mogę też rozpisać **czy przy tych danych z sierpnia 2026 r. warunek z umowy był już spełniony**, licząc to krok po kroku na podstawie samych dokumentów."
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          },
+          {
+            "call_id": "call_vZHluT1QyTtOxk73NeFr0ebL",
+            "parent_call_id": null,
+            "agent": "supervisor",
+            "tool": "ask_data_analyst",
+            "arguments": {
+              "task": "Ustal na podstawie danych, czy na koniec września 2026 r. dla dostawcy 'Mleczna Dolina' spełnione są warunki związane z OTIF potrzebne do rozwiązania umowy. Potrzebuję: właściwych warunków OTIF z umowy (jeśli dostępne), aktualnej/okresowej wartości OTIF do końca września 2026 r., źródła każdej liczby oraz krótkiej konkluzji, czy sam OTIF wskazuje na możliwość rozwiązania. Jeśli brakuje danych, wskaż czego."
+            },
+            "origin": "worker_summary",
+            "status": "ok",
+            "result": {
+              "summary": "Dla dostawcy **Mleczna Dolina** na koniec **września 2026 r.** mogę potwierdzić następujące dane:\n\n## 1) Warunki OTIF z umowy\n- **Identyfikator źródłowy umowy:** **CON-101**\n- **Cel OTIF:** **97,0%**\n- **Klauzula kary umownej:** **tak** (`penalty_clause = true`)\n- **Stawka kary:** **2,0% miesięcznej faktury za każdy pełny punkt procentowy poniżej celu**\n- **Limit kary:** **10,0% miesięcznej faktury**\n- **Tryb rozliczenia:** nota uznaniowa do faktury za następny miesiąc\n\n**Źródło:** narzędzie `get_contract_terms` dla dostawcy „Mleczna Dolina”.\n\n## 2) OTIF do końca września 2026 r.\nDostępne wartości OTIF z okresu **2026-01 do 2026-09**:\n\n- **2026-04:** **97,8%**\n- **2026-05:** **96,4%**\n- **2026-06:** **95,2%**\n- **2026-07:** **94,6%**\n- **2026-08:** **93,8%**\n- **2026-09:** **93,5%**\n\nBrak danych za:\n- **2026-01**\n- **2026-02**\n- **2026-03**\n\n**Źródło:** narzędzie `get_supplier_otif` dla „Mleczna Dolina”.\n\n## 3) Czy sam OTIF wskazuje na możliwość rozwiązania umowy?\nNa podstawie samych danych OTIF:\n\n- Od **kwietnia 2026 r.** OTIF jest:\n  - w **kwietniu** powyżej celu (**97,8% > 97,0%**),\n  - od **maja do września** **poniżej celu**.\n- W **wrześniu 2026 r.** OTIF wyniósł **93,5%**, czyli jest o **3,5 p.p.** poniżej celu **97,0%**.\n\n### Obliczenie odchylenia we wrześniu\n- **Cel z umowy (CON-101):** 97,0%\n- **OTIF 2026-09:** 93,5%\n- **Różnica:** 97,0% − 93,5% = **3,5 p.p.**\n\n**Wniosek:**  \n**Sam OTIF wskazuje na niespełnienie celu**, więc może to być przesłanka do rozważenia rozwiązania umowy, **ale nie mogę przesądzić, że warunki rozwiązania są spełnione**, ponieważ nie mam tu zapisów o progach/trybie rozwiązania umowy. Mam tylko warunki OTIF i kary.\n\n## 4) Czego brakuje\nAby jednoznacznie ocenić możliwość rozwiązania umowy, brakuje:\n- **postanowień umowy o rozwiązaniu** / wypowiedzeniu / przesłankach naruszenia,\n- ewentualnie informacji, **czy rozwiązanie wymaga określonej liczby kolejnych miesięcy poniżej celu**,\n- danych OTIF za **2026-01, 2026-02, 2026-03**, jeśli analiza ma obejmować pełny okres do końca września 2026 r.\n\nJeśli chcesz, mogę też policzyć **potencjalną karę OTIF za wrzesień 2026 r.** — do tego potrzebna będzie jeszcze **kwota faktury za 2026-09**."
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          },
+          {
+            "call_id": "call_CkIgw2A9GwAtqhLviRNpB4Nb",
+            "parent_call_id": null,
+            "agent": "supervisor",
+            "tool": "ask_policy_checker",
+            "arguments": {
+              "task": "Sprawdź, kto musi zatwierdzić decyzję o rozwiązaniu umowy lub związany z tym rabat/ustępstwo, jeśli taka polityka istnieje dla dostawcy 'Mleczna Dolina'. Podaj identyfikatory dokumentów, wymagane osoby/funkcje zatwierdzające oraz warunki, w których akceptacja jest potrzebna. Jeśli nie dotyczy, napisz to wprost."
+            },
+            "origin": "worker_summary",
+            "status": "ok",
+            "result": {
+              "summary": "Nie dotyczy — w udostępnionej polityce rabatowej **Kovalo POL-001** nie ma informacji o osobnej ścieżce akceptacji dla **rozwiązania umowy** ani dla rabatu/ustępstwa z tym związanego dla dostawcy **„Mleczna Dolina”**.\n\nMogę natomiast sprawdzić standardowe zasady zatwierdzania rabatów, jeśli podasz:\n- procent rabatu,\n- marżę brutto po rabacie,\n- oraz ewentualne flagi: clearance / strategic_account / competitor_offer / contractual_volume_rebate."
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          },
+          {
+            "call_id": "call_kZjuyXNNbiuDRB8YYBObgIHC",
+            "parent_call_id": "call_vZHluT1QyTtOxk73NeFr0ebL",
+            "agent": "data_analyst",
+            "tool": "get_contract_terms",
+            "arguments": {
+              "supplier": "Mleczna Dolina"
+            },
+            "origin": "data",
+            "status": "ok",
+            "result": {
+              "status": "ok",
+              "supplier_id": "SUP-114",
+              "supplier": "Mleczna Dolina",
+              "source_doc_id": "CON-101",
+              "otif_target_pct": 97.0,
+              "penalty_clause": true,
+              "rate_per_full_point_pct": 2.0,
+              "cap_pct": 10.0,
+              "settlement": "nota uznaniowa do faktury za następny miesiąc",
+              "terms_version": "terms-v1",
+              "message": null
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          },
+          {
+            "call_id": "call_oD9bY5ZSCxaII79Y0JRylAiI",
+            "parent_call_id": "call_vZHluT1QyTtOxk73NeFr0ebL",
+            "agent": "data_analyst",
+            "tool": "get_supplier_otif",
+            "arguments": {
+              "supplier": "Mleczna Dolina",
+              "from_month": "2026-01",
+              "to_month": "2026-09"
+            },
+            "origin": "data",
+            "status": "ok",
+            "result": {
+              "status": "ok",
+              "supplier_id": "SUP-114",
+              "supplier": "Mleczna Dolina",
+              "requested": {
+                "from": "2026-01",
+                "to": "2026-09"
+              },
+              "observations": [
+                {
+                  "month": "2026-04",
+                  "otif_pct": 97.8
+                },
+                {
+                  "month": "2026-05",
+                  "otif_pct": 96.4
+                },
+                {
+                  "month": "2026-06",
+                  "otif_pct": 95.2
+                },
+                {
+                  "month": "2026-07",
+                  "otif_pct": 94.6
+                },
+                {
+                  "month": "2026-08",
+                  "otif_pct": 93.8
+                },
+                {
+                  "month": "2026-09",
+                  "otif_pct": 93.5
+                }
+              ],
+              "missing_months": [
+                "2026-01",
+                "2026-02",
+                "2026-03"
+              ],
+              "complete": false,
+              "message": "brak danych za 2026-01, 2026-02, 2026-03"
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          },
+          {
+            "call_id": "call_DyyuCxp2AekAFVCwW1Mspuri",
+            "parent_call_id": "call_1TX1xzBISo2fUAUoYBpzlaZi",
+            "agent": "documents_analyst",
+            "tool": "search_documents",
+            "arguments": {
+              "question": "Dokumenty dotyczące relacji z dostawcą 'Mleczna Dolina': czy istnieje umowa, aneks lub polityka regulująca możliwość rozwiązania umowy z powodu OTIF na koniec września 2026 r.? Szukam postanowień o OTIF, terminacji/rozwiązaniu, okresu obowiązywania, progów lub warunków rozwiązania oraz dat granicznych. Uwzględnij tylko dokumenty, które odnoszą się do Mleczna Dolina."
+            },
+            "origin": "data",
+            "status": "ok",
+            "result": {
+              "status": "ok",
+              "query": "Dokumenty dotyczące relacji z dostawcą 'Mleczna Dolina': czy istnieje umowa, aneks lub polityka regulująca możliwość rozwiązania umowy z powodu OTIF na koniec września 2026 r.? Szukam postanowień o OTIF, terminacji/rozwiązaniu, okresu obowiązywania, progów lub warunków rozwiązania oraz dat granicznych. Uwzględnij tylko dokumenty, które odnoszą się do Mleczna Dolina.",
+              "passages": [
+                {
+                  "doc_id": "CON-101",
+                  "chunk_id": "CON-101#ctx000",
+                  "text": "Streszczenie umowy z dostawcą: Mleczna Dolina (SUP-114) > Strony i okres obowiązywania\n\n# Streszczenie umowy z dostawcą: Mleczna Dolina (SUP-114)  \n## Strony i okres obowiązywania  \nDostawca: Spółdzielnia Mleczarska Mleczna Dolina, numer dostawcy SUP-114. Kategoria: nabiał (mleko, jogurty, masło, sery). Umowa obowiązuje od 1 kwietnia 2025 r. do 31 marca 2027 r. i przedłuża się automatycznie o 12 miesięcy, chyba że jedna ze stron wypowie ją najpóźniej na 90 dni przed jej wygaśnięciem."
+                },
+                {
+                  "doc_id": "CON-101",
+                  "chunk_id": "CON-101#ctx004",
+                  "text": "Streszczenie umowy z dostawcą: Mleczna Dolina (SUP-114) > Rozwiązanie umowy\n\n## Rozwiązanie umowy  \nKovalo może rozwiązać umowę z 60-dniowym okresem wypowiedzenia, jeśli OTIF przez trzy kolejne miesiące wynosi mniej niż 94%, albo ze skutkiem natychmiastowym w razie incydentu bezpieczeństwa żywności, za który odpowiada dostawca."
+                },
+                {
+                  "doc_id": "MTG-403",
+                  "chunk_id": "MTG-403#ctx001",
+                  "text": "Spotkanie przeglądowe z dostawcą: Mleczna Dolina, 20 sierpnia 2026 r. > 1. Wyniki\n\n## 1. Wyniki  \nOTIF Mlecznej Doliny w ostatnich trzech miesiącach:  \n| Miesiąc | OTIF |\n|---|---|\n| Maj 2026 | 96,4% |\n| Czerwiec 2026 | 95,2% |\n| Lipiec 2026 | 94,6% |  \nW każdym z tych trzech miesięcy OTIF dostawcy był niższy od poziomu zapisanego w umowie. Większość uchybień dotyczy dostaw do Gdańska z 72-godzinnym czasem realizacji. Dostawca tłumaczył opóźnienia brakiem pojazdów chłodniczych i nową trasą ze swojego zakładu na Mazowszu."
+                }
+              ],
+              "message": null
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          }
+        ],
+        "steps": 13,
+        "input_tokens": 8941,
+        "output_tokens": 2555,
+        "seconds": 22.58
+      },
+      "score": {
+        "outcome": "answered",
+        "tool_coverage": 1.0,
+        "arguments_correct": null,
+        "answer_fact_coverage": 0.5,
+        "numeric_source_coverage": 0.8333333333333334,
+        "uncovered_numbers": [
+          "3",
+          "3"
+        ],
+        "user_stated_numbers": [],
+        "approval_claim": false,
+        "tool_calls": 6,
+        "failed_calls": 0
+      }
+    },
+    {
+      "trace": {
+        "question_id": "A1",
+        "question": "Czy w lipcu 2026 r. dostawca Aqua Kryształ nie osiągnął celu OTIF i czy należy się za to kara?",
+        "answer": "Dla **Aqua Kryształ (SUP-207)**:\n\n- **Cel OTIF:** **96.0%** — źródło: **CON-102**\n- **OTIF w lipcu 2026:** **95.1%** — źródło: **SUP-207 / 2026-07**\n- **Wniosek:** **tak, celu OTIF nie osiągnięto** (o **0.9 p.p.**) — źródło: **CON-102** + **SUP-207**\n- **Kara:** **nie należy się** — źródło: **CON-102**, bo umowa mówi: **„Umowa nie przewiduje kar finansowych”**\n\nBrakuje więc podstaw do naliczenia kary za lipiec 2026.",
+        "status": "answered",
+        "error": null,
+        "events": [
+          {
+            "call_id": "call_P3ZBNIv4ggDdZmJhfd02pNdW",
+            "parent_call_id": null,
+            "agent": "supervisor",
+            "tool": "ask_documents_analyst",
+            "arguments": {
+              "task": "Sprawdź w dokumentach dotyczących dostawcy Aqua Kryształ, czy istnieje zapis o celu/standardzie OTIF dla lipca 2026 oraz czy dokumenty wskazują, że za niewykonanie OTIF w tym miesiącu naliczana jest kara. Podaj identyfikatory dokumentów, cytowane fragmenty i wskaż, czego ewentualnie brakuje do jednoznacznej odpowiedzi."
+            },
+            "origin": "worker_summary",
+            "status": "ok",
+            "result": {
+              "summary": "Sprawdziłem dostępny dokument dotyczący dostawcy Aqua Kryształ.\n\n### Co wynika z dokumentów\n- **Jest zapis o celu OTIF**: standardowy cel OTIF wynosi **96%**.\n- **Nie znalazłem zapisu o celu/standardzie OTIF specyficznie dla lipca 2026** — dokument mówi o umowie obowiązującej w **roku kalendarzowym 2026**, ale nie rozbija celu na miesiące.\n- **Nie ma zapisu o karze za niewykonanie OTIF**; dokument wprost wskazuje, że **umowa nie przewiduje kar finansowych**.\n\n### Cytowane fragmenty\n1. **CON-102**\n   > „Umowa obowiązuje w roku kalendarzowym 2026.”\n\n2. **CON-102**\n   > „Standardowy cel OTIF (dostawy na czas i w komplecie): 96%. Umowa nie przewiduje kar finansowych; słabsze wyniki dostawcy omawia się na kwartalnym przeglądzie biznesowym.”\n\n### Wniosek\nNa podstawie dostępnych dokumentów:\n- **tak**, istnieje ogólny zapis o celu OTIF,\n- **nie ma** jednoznacznego zapisu o celu OTIF **dla lipca 2026**,\n- **nie ma** podstaw do stwierdzenia, że za niewykonanie OTIF w lipcu 2026 naliczana jest kara — przeciwnie, dokument mówi, że **kar finansowych nie przewidziano**.\n\n### Czego brakuje do całkowicie jednoznacznej odpowiedzi\nBrakuje dokumentu lub fragmentu:\n- z **miesięcznym planem/targetem OTIF** dla lipca 2026, albo\n- z **aneksem / SLA / polityką kar**, który mógłby zmieniać ogólną zasadę z umowy.\n\nJeśli chcesz, mogę też sprawdzić, czy w innych dokumentach o Aqua Kryształ są **aneks, SLA lub notatki operacyjne** odnoszące się konkretnie do lipca 2026."
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          },
+          {
+            "call_id": "call_F3dQ9yHIg1EomFelQ7RDgnC6",
+            "parent_call_id": null,
+            "agent": "supervisor",
+            "tool": "ask_data_analyst",
+            "arguments": {
+              "task": "Dla dostawcy Aqua Kryształ ustal na podstawie danych: jaki był cel OTIF z umowy dla lipca 2026, jaka była rzeczywista wartość OTIF w lipcu 2026, oraz czy według zasad naliczania kar i ewentualnych faktur należy się kara za ten miesiąc. Podaj identyfikatory źródeł, wartości liczbowe z jednostkami oraz sposób obliczenia, jeśli kara występuje."
+            },
+            "origin": "worker_summary",
+            "status": "ok",
+            "result": {
+              "summary": "Dla dostawcy **Aqua Kryształ**:\n\n- **Identyfikator dostawcy:** `SUP-207`\n- **Źródło warunków umowy:** `CON-102`\n- **Cel OTIF na lipiec 2026:** **96.0% OTIF**  \n  - źródło: `CON-102` (`otif_target_pct = 96.0%`)\n\n- **Rzeczywisty OTIF w lipcu 2026:** **95.1% OTIF**  \n  - źródło danych OTIF: `SUP-207`, miesiąc `2026-07`\n\n- **Kwota z faktury za lipiec 2026:** **9,630,000 groszy = 96,300.00 PLN**  \n  - źródło faktury: `SUP-207`, miesiąc `2026-07`\n\n### Czy należy się kara?\n**Nie.**  \nPowód: w umowie `CON-102` dla tego dostawcy widnieje **`penalty_clause = false`**, więc mimo że OTIF był niższy od celu o **0.9 punktu procentowego** (96.0% - 95.1% = 0.9 pp), **kara umowna nie jest naliczana**.\n\n### Uwaga o obliczeniu\nGdyby kara była przewidziana, należałoby ją liczyć na podstawie:\n- celu OTIF: **96.0%**\n- rzeczywistego OTIF: **95.1%**\n- faktury: **9,630,000 groszy**\n\nAle ponieważ **brakuje klauzuli karnej**, nie wykonuje się naliczenia kary."
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          },
+          {
+            "call_id": "call_WP7dkVwlEnZupHjKDp6RQagU",
+            "parent_call_id": null,
+            "agent": "supervisor",
+            "tool": "ask_policy_checker",
+            "arguments": {
+              "task": "Sprawdź, kto musi zatwierdzić ewentualny rabat/korektę związaną z karą lub obniżką za niedotrzymanie OTIF dla dostawcy Aqua Kryształ w lipcu 2026. Podaj wymagane role/osoby lub brak takiej informacji w polityce, wraz z identyfikatorem dokumentu/polityki."
+            },
+            "origin": "worker_summary",
+            "status": "ok",
+            "result": {
+              "summary": "Dla rabatu/korekty związanej z karą lub obniżką za niedotrzymanie OTIF nie mam w samej polityce wskazanej osobnej, dedykowanej ścieżki dla tego konkretnego przypadku — mogę jedynie oprzeć się na ogólnej polityce rabatowej.\n\n**Wynik wg polityki:**\n- **Wymagana akceptacja:** **Przedstawiciel handlowy**\n- **Dlaczego:** rabat **0%** mieści się w przedziale **do 5%**, a dla takiego poziomu polityka wskazuje akceptację przez **Przedstawiciela handlowego**\n- **Uwagi:** nie podano marży po rabacie, więc **minimalnej marży nie sprawdzono**\n\n**Identyfikator dokumentu/polityki:**\n- **POL-001**\n- wersja kursowa: **course-v1**\n\nJeśli chcesz, mogę też pomóc sformułować to jako krótką notatkę do maila albo wniosku akceptacyjnego."
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          },
+          {
+            "call_id": "call_0pyQojqZPi3A20h99qFqPz75",
+            "parent_call_id": "call_WP7dkVwlEnZupHjKDp6RQagU",
+            "agent": "policy_checker",
+            "tool": "check_discount_policy",
+            "arguments": {
+              "discount_pct": 0,
+              "margin_after_pct": null,
+              "clearance": false,
+              "strategic_account": false,
+              "competitor_offer": false,
+              "contractual_volume_rebate": false
+            },
+            "origin": "calculation",
+            "status": "ok",
+            "result": {
+              "status": "ok",
+              "approvers": [
+                "Przedstawiciel handlowy"
+              ],
+              "reasons": [
+                "rabat 0% mieści się w przedziale do 5%; zatwierdza: Przedstawiciel handlowy (tabela POL-001)",
+                "nie podano marży po rabacie: minimalnej marży nie sprawdzono"
+              ],
+              "version": "course-v1",
+              "margin_checked": false,
+              "partial": true,
+              "note": "tylko informacja: to sprawdzenie niczego nie zatwierdza; wnioski o akceptację przechodzą przez workflow akceptacji (Miniprojekt 3)",
+              "message": null
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          },
+          {
+            "call_id": "call_ft4WjKftH0TrmQVUpnhAkZhz",
+            "parent_call_id": "call_F3dQ9yHIg1EomFelQ7RDgnC6",
+            "agent": "data_analyst",
+            "tool": "get_contract_terms",
+            "arguments": {
+              "supplier": "Aqua Kryształ"
+            },
+            "origin": "data",
+            "status": "ok",
+            "result": {
+              "status": "ok",
+              "supplier_id": "SUP-207",
+              "supplier": "Aqua Kryształ",
+              "source_doc_id": "CON-102",
+              "otif_target_pct": 96.0,
+              "penalty_clause": false,
+              "rate_per_full_point_pct": null,
+              "cap_pct": null,
+              "settlement": "słabsze wyniki dostawcy omawia się na kwartalnym przeglądzie biznesowym",
+              "terms_version": "terms-v1",
+              "message": null
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          },
+          {
+            "call_id": "call_GMEn4RtbSylYqrliBAycrHDQ",
+            "parent_call_id": "call_F3dQ9yHIg1EomFelQ7RDgnC6",
+            "agent": "data_analyst",
+            "tool": "get_supplier_otif",
+            "arguments": {
+              "supplier": "Aqua Kryształ",
+              "from_month": "2026-07",
+              "to_month": "2026-07"
+            },
+            "origin": "data",
+            "status": "ok",
+            "result": {
+              "status": "ok",
+              "supplier_id": "SUP-207",
+              "supplier": "Aqua Kryształ",
+              "requested": {
+                "from": "2026-07",
+                "to": "2026-07"
+              },
+              "observations": [
+                {
+                  "month": "2026-07",
+                  "otif_pct": 95.1
+                }
+              ],
+              "missing_months": [],
+              "complete": true,
+              "message": null
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          },
+          {
+            "call_id": "call_Xht2LYz3JoD0d8Xk1AyPwSI0",
+            "parent_call_id": "call_F3dQ9yHIg1EomFelQ7RDgnC6",
+            "agent": "data_analyst",
+            "tool": "get_invoice_value",
+            "arguments": {
+              "supplier": "Aqua Kryształ",
+              "month": "2026-07"
+            },
+            "origin": "data",
+            "status": "ok",
+            "result": {
+              "status": "ok",
+              "supplier_id": "SUP-207",
+              "supplier": "Aqua Kryształ",
+              "month": "2026-07",
+              "invoiced_grosze": 9630000,
+              "currency": "PLN",
+              "message": null
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          },
+          {
+            "call_id": "call_bQzcSHoI4uRFHvaINq5XqReU",
+            "parent_call_id": "call_P3ZBNIv4ggDdZmJhfd02pNdW",
+            "agent": "documents_analyst",
+            "tool": "search_documents",
+            "arguments": {
+              "question": "Aqua Kryształ OTIF lipiec 2026 cel standard kara za niewykonanie OTIF dokumenty dotyczące dostawcy Aqua Kryształ czy istnieje zapis o celu/standardzie OTIF dla lipca 2026 oraz czy za niewykonanie OTIF w tym miesiącu naliczana jest kara"
+            },
+            "origin": "data",
+            "status": "ok",
+            "result": {
+              "status": "ok",
+              "query": "Aqua Kryształ OTIF lipiec 2026 cel standard kara za niewykonanie OTIF dokumenty dotyczące dostawcy Aqua Kryształ czy istnieje zapis o celu/standardzie OTIF dla lipca 2026 oraz czy za niewykonanie OTIF w tym miesiącu naliczana jest kara",
+              "passages": [
+                {
+                  "doc_id": "CON-102",
+                  "chunk_id": "CON-102#ctx004",
+                  "text": "Streszczenie umowy z dostawcą: Aqua Kryształ (SUP-207) > Poziom obsługi\n\n## Poziom obsługi  \nStandardowy cel OTIF (dostawy na czas i w komplecie): 96%. Umowa nie przewiduje kar finansowych; słabsze wyniki dostawcy omawia się na kwartalnym przeglądzie biznesowym."
+                },
+                {
+                  "doc_id": "CON-102",
+                  "chunk_id": "CON-102#ctx003",
+                  "text": "Streszczenie umowy z dostawcą: Aqua Kryształ (SUP-207) > Zmiany cen\n\n## Zmiany cen  \nDostawca może zmieniać ceny cennikowe raz w roku, z 60-dniowym wyprzedzeniem. Od 1 września 2026 r. ogłosił podwyżkę o 5%. Kovalo zaakceptowało ją w zamian za wydłużenie terminu płatności do 45 dni."
+                },
+                {
+                  "doc_id": "CON-102",
+                  "chunk_id": "CON-102#ctx000",
+                  "text": "Streszczenie umowy z dostawcą: Aqua Kryształ (SUP-207) > Strony i okres obowiązywania\n\n# Streszczenie umowy z dostawcą: Aqua Kryształ (SUP-207)  \n## Strony i okres obowiązywania  \nDostawca: Aqua Kryształ S.A., numer dostawcy SUP-207. Kategoria: butelkowana woda mineralna i źródlana, woda smakowa. Umowa obowiązuje w roku kalendarzowym 2026."
+                }
+              ],
+              "message": null
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          }
+        ],
+        "steps": 16,
+        "input_tokens": 8430,
+        "output_tokens": 1808,
+        "seconds": 19.97
+      },
+      "score": {
+        "outcome": "answered",
+        "tool_coverage": 1.0,
+        "arguments_correct": null,
+        "answer_fact_coverage": 1.0,
+        "numeric_source_coverage": 0.6666666666666666,
+        "uncovered_numbers": [
+          "0.9"
+        ],
+        "user_stated_numbers": [],
+        "approval_claim": false,
+        "tool_calls": 8,
+        "failed_calls": 0
+      }
+    },
+    {
+      "trace": {
+        "question_id": "D1",
+        "question": "Kto musi zatwierdzić rabat 22% dla naszego klienta strategicznego Carrefour Express przy marży po rabacie 7%?",
+        "answer": "Na podstawie **POL-001 „Polityka akceptacji rabatów”**:\n\n- **Dla klientów strategicznych**: **dyrektor handlowy** może zatwierdzać rabaty do **25%**  \n  - źródło: **POL-001#ctx004**, sekcja **„Wyjątki”**\n- Ogólna tabela mówi też, że rabaty **powyżej 20%** zatwierdzają **CEO i CFO wspólnie**  \n  - źródło: **POL-001#ctx002**, sekcja **„Progi akceptacji”**\n\nDla **Carrefour Express**, przy **rabatcie 22%** i **marży po rabacie 7%**, dokument **nie podaje osobnego progu marży**. Jest też **niespójność** między wyjątkiem dla klientów strategicznych a ogólnym progiem >20%.\n\nJeśli mam wskazać tylko jedną ścieżkę z dokumentu dla klienta strategicznego: **dyrektor handlowy**.",
+        "status": "answered",
+        "error": null,
+        "events": [
+          {
+            "call_id": "call_uXsrNHdMOOMt0g1VS328I07P",
+            "parent_call_id": null,
+            "agent": "supervisor",
+            "tool": "ask_documents_analyst",
+            "arguments": {
+              "task": "Sprawdź w dokumentach firmowych, kto musi zatwierdzić rabat dla klienta strategicznego Carrefour Express przy warunkach: rabat 22% i marża po rabacie 7%. Podaj dokładne źródło dokumentu/dokumentów (identyfikator, nazwa, sekcja/fragment) oraz streszczenie reguły decyzyjnej. Jeśli reguła zależy od progu marży, wskaż wszystkie progi i wymagane osoby/role."
+            },
+            "origin": "worker_summary",
+            "status": "ok",
+            "result": {
+              "summary": "Z dokumentów wynika, że dla **klienta strategicznego** obowiązuje **wyjątek**, ale tylko do **rabatów do 25%**.\n\n## Wniosek dla podanych warunków\n- **Rabat 22%** mieści się w limicie dla klientów strategicznych.\n- Jednak ogólna tabela progów mówi, że **powyżej 20%** zatwierdzenie wymaga **CEO i CFO wspólnie**.\n- W odniesieniu do wyjątku dla klientów strategicznych dokument wskazuje, że **dyrektor handlowy może zatwierdzać rabaty do 25%** dla klientów oznaczonych w CRM jako strategiczni.\n\n### Interpretacja decyzji\nDla **Carrefour Express jako klienta strategicznego** przy **rabatcie 22%**:\n- właściwa ścieżka zatwierdzenia z sekcji „Wyjątki” to **dyrektor handlowy**,\n- ale ponieważ ogólna tabela progów dla rabatów mówi, że **powyżej 20%** zatwierdzają **CEO i CFO wspólnie**, mamy tu **potencjalną kolizję reguł**.\n\nW praktyce, z samego tekstu dokumentu nie da się jednoznacznie stwierdzić, czy wyjątek dla klientów strategicznych **znosi** ogólny próg „powyżej 20%”, czy tylko go **uzupełnia**. Najbezpieczniejsza interpretacja to:\n- **dla klientów strategicznych do 25%: dyrektor handlowy**,\n- **jeśli stosować wyłącznie ogólną tabelę progów: CEO i CFO wspólnie**.\n\n## Próg marży\nW dostarczonym dokumencie **nie ma progu marży po rabacie** jako warunku zatwierdzenia dla zwykłych rabatów ani dla klientów strategicznych. Jedyny zapis o marży brzmi, że:\n- **minimalna marża nie dotyczy wyprzedaży końcówek**.\n\nDla Twojego przypadku (**marża po rabacie 7%**) dokument **nie podaje osobnej reguły opartej o próg marży**.\n\n## Źródła\n\n### 1) POL-001 — „Polityka akceptacji rabatów”\n**Sekcja / fragment:**  \n- **„Wyjątki”**  \n  > „Klienci strategiczni: dyrektor handlowy może zatwierdzać rabaty do 25% dla dziesięciu klientów oznaczonych w CRM jako strategiczni.”\n\n- **„Progi akceptacji”**  \n  > „| powyżej 20% | CEO i CFO wspólnie |”\n\n### 2) POL-001 — „Polityka akceptacji rabatów”\n**Sekcja / fragment:**  \n- **„Wyjątki”**  \n  > „Wyprzedaż końcówek: ... Minimalna marża nie dotyczy wyprzedaży końcówek.”\n\n## Streszczenie reguły decyzyjnej\n- Rabaty dla klientów strategicznych mogą być zatwierdzane przez **dyrektora handlowego do 25%**.\n- Ogólna polityka progów mówi, że **powyżej 20%** zatwierdzają **CEO i CFO wspólnie**.\n- Dokument **nie zawiera progu marży po rabacie** dla tego typu decyzji.\n- Przy braku dodatkowej klauzuli rozstrzygającej można uznać, że dla **22%** u klienta strategicznego właściwy jest **dyrektor handlowy**, ale istnieje **niespójność** z ogólnym progiem >20%.\n\nJeśli chcesz, mogę też przygotować krótką tabelę „próg rabatu → osoba/rola” z tego dokumentu."
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          },
+          {
+            "call_id": "call_q3WnsghJnTzKyY6f6dcfiXcH",
+            "parent_call_id": "call_uXsrNHdMOOMt0g1VS328I07P",
+            "agent": "documents_analyst",
+            "tool": "search_documents",
+            "arguments": {
+              "question": "Kto musi zatwierdzić rabat dla klienta strategicznego Carrefour Express przy warunkach: rabat 22% i marża po rabacie 7%? Podaj regułę decyzyjną, progi marży i wymagane osoby/role, wraz z identyfikatorem dokumentu, nazwą, sekcją i fragmentem."
+            },
+            "origin": "data",
+            "status": "ok",
+            "result": {
+              "status": "ok",
+              "query": "Kto musi zatwierdzić rabat dla klienta strategicznego Carrefour Express przy warunkach: rabat 22% i marża po rabacie 7%? Podaj regułę decyzyjną, progi marży i wymagane osoby/role, wraz z identyfikatorem dokumentu, nazwą, sekcją i fragmentem.",
+              "passages": [
+                {
+                  "doc_id": "POL-001",
+                  "chunk_id": "POL-001#ctx004",
+                  "text": "Polityka akceptacji rabatów > Wyjątki\n\n## Wyjątki  \n1. Wyprzedaż końcówek: na produkty oznaczone jako wyprzedaż końcówek (mniej niż 30 dni do daty minimalnej trwałości albo wycofane z oferty) regionalny kierownik sprzedaży może zatwierdzić rabat do 35%. Minimalna marża nie dotyczy wyprzedaży końcówek.\n2. Klienci strategiczni: dyrektor handlowy może zatwierdzać rabaty do 25% dla dziesięciu klientów oznaczonych w CRM jako strategiczni.\n3. Oferta konkurencji: udokumentowana oferta konkurencji pozwala regionalnemu kierownikowi sprzedaży zatwierdzić rabat do 15%."
+                },
+                {
+                  "doc_id": "POL-001",
+                  "chunk_id": "POL-001#ctx002",
+                  "text": "Polityka akceptacji rabatów > Progi akceptacji\n\n## Progi akceptacji  \nWysokość rabatu zawsze liczy się od ceny cennikowej pozycji zamówienia, bez VAT.  \n| Rabat na pozycji zamówienia | Kto zatwierdza |\n|---|---|\n| do 5% | Przedstawiciel handlowy |\n| powyżej 5% do 12% włącznie | Regionalny kierownik sprzedaży |\n| powyżej 12% do 20% włącznie | Dyrektor handlowy |\n| powyżej 20% | CEO i CFO wspólnie |  \nOsoba zatwierdzająca zawsze może przekazać decyzję na wyższy szczebel. Akceptację trzeba odnotować w CRM, zanim zamówienie trafi do magazynu."
+                },
+                {
+                  "doc_id": "POL-001",
+                  "chunk_id": "POL-001#ctx000",
+                  "text": "Polityka akceptacji rabatów > Cel\n\n# Polityka akceptacji rabatów  \n## Cel  \nPolityka określa, kto i na jakich warunkach może zatwierdzać rabaty cenowe dla klientów Kovalo. Chroni marżę brutto firmy, a jednocześnie daje zespołowi sprzedaży dość swobody, by zdobywać i utrzymywać klientów."
+                }
+              ],
+              "message": null
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          }
+        ],
+        "steps": 6,
+        "input_tokens": 4490,
+        "output_tokens": 1301,
+        "seconds": 21.65
+      },
+      "score": {
+        "outcome": "answered",
+        "tool_coverage": 0.0,
+        "arguments_correct": null,
+        "answer_fact_coverage": 1.0,
+        "numeric_source_coverage": 1.0,
+        "uncovered_numbers": [],
+        "user_stated_numbers": [
+          "22",
+          "7"
+        ],
+        "approval_claim": false,
+        "tool_calls": 2,
+        "failed_calls": 0
+      }
+    },
+    {
+      "trace": {
+        "question_id": "S1",
+        "question": "Czego wymaga umowa z TransBałtem w zakresie terminowych dostaw palet?",
+        "answer": "Umowa **CON-103** z TransBałtem wymaga w sekcji **„Poziom obsługi i odpowiedzialność”**, aby TransBałt **dostarczał 98% palet w uzgodnionym oknie czasowym**.\n\nŹródło liczby i treści:\n- **98%** — z dokumentu **CON-103**, sekcja **„Poziom obsługi i odpowiedzialność”**\n- cytat: **„TransBałt musi dostarczać 98% palet w uzgodnionym oknie czasowym.”**\n\nNie znalazłem w tym fragmencie osobnej definicji **OTIF** ani dodatkowych terminów typu konkretna liczba godzin/dni.",
+        "status": "answered",
+        "error": null,
+        "events": [
+          {
+            "call_id": "call_7JiFOf1s28MjhIAUrdVw4YxS",
+            "parent_call_id": null,
+            "agent": "supervisor",
+            "tool": "ask_documents_analyst",
+            "arguments": {
+              "task": "Znajdź w dokumentach umowę z TransBałtem i wskaż dokładnie, czego wymaga w zakresie terminowych dostaw palet. Podaj: identyfikator dokumentu/umowy, nazwę strony dokumentu lub klauzuli, treść wymogu dotyczącego terminowości dostaw, ewentualne progi/terminy/definicje oraz cytat lub możliwie wierne brzmienie. Jeśli w dokumentach są różne wersje lub aneksy, wskaż właściwą i zaznacz, czy wymóg dotyczy OTIF, terminów dostaw, czy innego KPI."
+            },
+            "origin": "worker_summary",
+            "status": "ok",
+            "result": {
+              "summary": "Znalazłem jedną właściwą umowę z TransBałtem:\n\n- **Identyfikator dokumentu:** **CON-103**\n- **Nazwa strony / sekcji:** **„Poziom obsługi i odpowiedzialność”**\n- **Wymóg dotyczący terminowości dostaw palet:** TransBałt **musi dostarczać 98% palet w uzgodnionym oknie czasowym**.\n- **Charakter wymogu:** to jest **SLA / KPI dotyczący terminowości dostaw**, nie osobny zapis o OTIF wprost.\n- **Definicje / progi / terminy:** w znalezionym fragmencie jedyny próg to **98%**; terminowość jest opisana jako **„uzgodnione okno czasowe”**. Nie widzę tu dodatkowej definicji OTIF ani osobnych terminów typu „dostawa do X godzin/dni”.\n- **Możliwie wierne brzmienie cytatu:**  \n  > „TransBałt musi dostarczać **98% palet w uzgodnionym oknie czasowym**.”\n\nDla pełności: w tym samym dokumencie są też fragmenty o stawkach i zakresie współpracy, ale **wymóg terminowości** znajduje się właśnie w sekcji **„Poziom obsługi i odpowiedzialność”**.\n\nJeśli chcesz, mogę też pomóc odróżnić, czy to zapis należy interpretować jako **OTIF**, czy raczej jako **procent dostaw w oknie czasowym** bez pełnej definicji OTIF."
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          },
+          {
+            "call_id": "call_YgsJaZZCzZFAKxk5H79nYKIw",
+            "parent_call_id": "call_7JiFOf1s28MjhIAUrdVw4YxS",
+            "agent": "documents_analyst",
+            "tool": "search_documents",
+            "arguments": {
+              "question": "Umowa z TransBałtem: wymagania dotyczące terminowych dostaw palet, OTIF, terminy dostaw, KPI, progi, definicje, wersje i aneksy. Podaj identyfikator dokumentu, nazwę strony/klauzuli i cytat."
+            },
+            "origin": "data",
+            "status": "ok",
+            "result": {
+              "status": "ok",
+              "query": "Umowa z TransBałtem: wymagania dotyczące terminowych dostaw palet, OTIF, terminy dostaw, KPI, progi, definicje, wersje i aneksy. Podaj identyfikator dokumentu, nazwę strony/klauzuli i cytat.",
+              "passages": [
+                {
+                  "doc_id": "CON-103",
+                  "chunk_id": "CON-103#ctx001",
+                  "text": "Umowa z podwykonawcą logistycznym: TransBałt > Stawki\n\n## Stawki  \n- Standardowa dostawa palety: 145 PLN za paletę do 100 km, 190 PLN za paletę na odległość od 100 do 250 km.\n- Dostawa palety w transporcie chłodniczym: dopłata 25% do stawki standardowej.\n- Minimalna opłata za jeden punkt dostawy: 90 PLN."
+                },
+                {
+                  "doc_id": "CON-103",
+                  "chunk_id": "CON-103#ctx003",
+                  "text": "Umowa z podwykonawcą logistycznym: TransBałt > Poziom obsługi i odpowiedzialność\n\n## Poziom obsługi i odpowiedzialność  \nTransBałt musi dostarczać 98% palet w uzgodnionym oknie czasowym. Odpowiedzialność za uszkodzony towar jest ograniczona do 25 PLN za kilogram, zgodnie ze standardowymi warunkami CMR, chyba że szkoda wynika z rażącego niedbalstwa."
+                },
+                {
+                  "doc_id": "CON-103",
+                  "chunk_id": "CON-103#ctx000",
+                  "text": "Umowa z podwykonawcą logistycznym: TransBałt > Zakres\n\n# Umowa z podwykonawcą logistycznym: TransBałt  \n## Zakres  \nTransBałt sp. z o.o. zapewnia dodatkowe moce przewozowe z magazynu w Gdańsku do klientów w województwach pomorskim i warmińsko-mazurskim, gdy własna flota Kovalo jest w pełni wykorzystana."
+                }
+              ],
+              "message": null
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          }
+        ],
+        "steps": 6,
+        "input_tokens": 3710,
+        "output_tokens": 753,
+        "seconds": 18.85
+      },
+      "score": {
+        "outcome": "answered",
+        "tool_coverage": 1.0,
+        "arguments_correct": null,
+        "answer_fact_coverage": 1.0,
+        "numeric_source_coverage": 1.0,
+        "uncovered_numbers": [],
+        "user_stated_numbers": [],
+        "approval_claim": false,
+        "tool_calls": 2,
+        "failed_calls": 0
+      }
+    },
+    {
+      "trace": {
+        "question_id": "N1",
+        "question": "Jaki był OTIF Mlecznej Doliny w październiku 2026 r.?",
+        "answer": "Nie mam OTIF dla Mlecznej Doliny za **październik 2026**.\n\n- **SUP-114 / zapytanie OTIF 2026-10**: brak danych za **2026-10** (`missing_months: [\"2026-10\"]`).\n- W dokumentach są tylko wcześniejsze miesiące:\n  - **MTG-403**: maj 2026 **96,4%**, czerwiec 2026 **95,2%**, lipiec 2026 **94,6%**.\n  - **CON-101**: próg OTIF **97%** i zasady bonifikaty.\n\nBrakuje więc danych OTIF za sam październik 2026.",
+        "status": "answered",
+        "error": null,
+        "events": [
+          {
+            "call_id": "call_F2yExVdlaYbpPAaJP9Bl5OWW",
+            "parent_call_id": null,
+            "agent": "supervisor",
+            "tool": "ask_documents_analyst",
+            "arguments": {
+              "task": "Znajdź w dokumentach, czy istnieje dokument lub wzmianka dotycząca dostawcy/klienta 'Mleczna Dolina' oraz miesiąca październik 2026. Podaj identyfikatory znalezionych dokumentów i krótko co mówią o OTIF, jeśli OTIF jest opisany w dokumentach. Jeśli nie ma takiej wzmianki, napisz to wprost."
+            },
+            "origin": "worker_summary",
+            "status": "ok",
+            "result": {
+              "summary": "Znalazłem wzmianki dotyczące **Mlecznej Doliny**, ale **nie znalazłem żadnej wzmianki odnoszącej się konkretnie do października 2026**.\n\nZnalezione dokumenty:\n- **MTG-403** — spotkanie przeglądowe z dostawcą Mleczna Dolina z **20 sierpnia 2026 r.**\n  - Dokument podaje OTIF za **maj 2026: 96,4%**, **czerwiec 2026: 95,2%**, **lipiec 2026: 94,6%**.\n  - Wskazuje, że w każdym z tych trzech miesięcy OTIF był **niższy niż poziom zapisany w umowie**.\n  - Wzmiankuje też, że uchybienia dotyczyły głównie dostaw do Gdańska z 72-godzinnym czasem realizacji.\n\n- **CON-101** — streszczenie umowy z dostawcą **Mleczna Dolina (SUP-114)**\n  - OTIF poniżej **97%** skutkuje bonifikatą dla Kovalo: **2% wartości faktur za każdy pełny punkt procentowy poniżej celu**, maksymalnie **10%** miesięcznej faktury.\n  - Umowa może być rozwiązana, jeśli OTIF przez **trzy kolejne miesiące** wynosi mniej niż **94%**.\n\nPodsumowanie:\n- **Mleczna Dolina: tak, jest w dokumentach.**\n- **Październik 2026: nie znalazłem takiej wzmianki.**\n- **OTIF jest opisany** w dokumentach MTG-403 i CON-101."
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          },
+          {
+            "call_id": "call_U74aLjENE2gqEmlvQVy7TYEI",
+            "parent_call_id": "call_F2yExVdlaYbpPAaJP9Bl5OWW",
+            "agent": "documents_analyst",
+            "tool": "search_documents",
+            "arguments": {
+              "question": "Czy w dokumentach jest jakikolwiek dokument lub wzmianka dotycząca dostawcy/klienta 'Mleczna Dolina' oraz miesiąca październik 2026? Jeśli tak, podaj doc_id i krótko opisz, co mówią o OTIF, o ile OTIF jest opisany."
+            },
+            "origin": "data",
+            "status": "ok",
+            "result": {
+              "status": "ok",
+              "query": "Czy w dokumentach jest jakikolwiek dokument lub wzmianka dotycząca dostawcy/klienta 'Mleczna Dolina' oraz miesiąca październik 2026? Jeśli tak, podaj doc_id i krótko opisz, co mówią o OTIF, o ile OTIF jest opisany.",
+              "passages": [
+                {
+                  "doc_id": "MTG-403",
+                  "chunk_id": "MTG-403#ctx001",
+                  "text": "Spotkanie przeglądowe z dostawcą: Mleczna Dolina, 20 sierpnia 2026 r. > 1. Wyniki\n\n## 1. Wyniki  \nOTIF Mlecznej Doliny w ostatnich trzech miesiącach:  \n| Miesiąc | OTIF |\n|---|---|\n| Maj 2026 | 96,4% |\n| Czerwiec 2026 | 95,2% |\n| Lipiec 2026 | 94,6% |  \nW każdym z tych trzech miesięcy OTIF dostawcy był niższy od poziomu zapisanego w umowie. Większość uchybień dotyczy dostaw do Gdańska z 72-godzinnym czasem realizacji. Dostawca tłumaczył opóźnienia brakiem pojazdów chłodniczych i nową trasą ze swojego zakładu na Mazowszu."
+                },
+                {
+                  "doc_id": "CON-101",
+                  "chunk_id": "CON-101#ctx003",
+                  "text": "Streszczenie umowy z dostawcą: Mleczna Dolina (SUP-114) > Kara umowna\n\n## Kara umowna  \nJeśli miesięczny wskaźnik OTIF spadnie poniżej 97%, Mleczna Dolina przyznaje Kovalo bonifikatę w wysokości 2% wartości faktur z tego miesiąca za każdy pełny punkt procentowy poniżej celu, nie więcej jednak niż 10% miesięcznej faktury. Kary rozlicza się notą uznaniową do faktury za następny miesiąc."
+                },
+                {
+                  "doc_id": "CON-101",
+                  "chunk_id": "CON-101#ctx004",
+                  "text": "Streszczenie umowy z dostawcą: Mleczna Dolina (SUP-114) > Rozwiązanie umowy\n\n## Rozwiązanie umowy  \nKovalo może rozwiązać umowę z 60-dniowym okresem wypowiedzenia, jeśli OTIF przez trzy kolejne miesiące wynosi mniej niż 94%, albo ze skutkiem natychmiastowym w razie incydentu bezpieczeństwa żywności, za który odpowiada dostawca."
+                }
+              ],
+              "message": null
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          },
+          {
+            "call_id": "call_ibjCVhJ5xwyIrHUZ702Cfwnt",
+            "parent_call_id": null,
+            "agent": "supervisor",
+            "tool": "ask_data_analyst",
+            "arguments": {
+              "task": "Sprawdź dla dostawcy Mleczna Dolina (SUP-114) i miesiąca październik 2026: 1) czy są dostępne dane OTIF za ten miesiąc, 2) jeśli tak, podaj wartość OTIF i źródło, 3) jeśli nie ma OTIF, powiedz, czego brakuje. Nie obliczaj kar, jeśli nie masz danych wejściowych. Zachowaj identyfikatory źródeł."
+            },
+            "origin": "worker_summary",
+            "status": "ok",
+            "result": {
+              "summary": "Dla dostawcy **Mleczna Dolina (SUP-114)** i miesiąca **2026-10**:\n\n1) **Czy są dostępne dane OTIF?**  \n**Nie.** Narzędzie zwróciło brak danych dla tego miesiąca.\n\n2) **Wartość OTIF i źródło**  \nNie można podać wartości OTIF, ponieważ **brakuje danych za 2026-10**.\n\n3) **Czego brakuje**  \nBrakuje obserwacji OTIF dla miesiąca **2026-10**.  \nŹródło: **SUP-114 / zapytanie OTIF za 2026-10** → wynik `missing_months: [\"2026-10\"]`, komunikat: **\"brak danych za 2026-10\"**.\n\nNie obliczałem kar, bo nie ma danych wejściowych OTIF za ten miesiąc."
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          },
+          {
+            "call_id": "call_F9tyEkK8PFQGhNQBMIGZcgOR",
+            "parent_call_id": "call_ibjCVhJ5xwyIrHUZ702Cfwnt",
+            "agent": "data_analyst",
+            "tool": "get_supplier_otif",
+            "arguments": {
+              "supplier": "SUP-114",
+              "from_month": "2026-10",
+              "to_month": "2026-10"
+            },
+            "origin": "data",
+            "status": "ok",
+            "result": {
+              "status": "no_data",
+              "supplier_id": "SUP-114",
+              "supplier": "Mleczna Dolina",
+              "requested": {
+                "from": "2026-10",
+                "to": "2026-10"
+              },
+              "observations": [],
+              "missing_months": [
+                "2026-10"
+              ],
+              "complete": false,
+              "message": "brak danych za 2026-10"
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          }
+        ],
+        "steps": 11,
+        "input_tokens": 8087,
+        "output_tokens": 1091,
+        "seconds": 31.38
+      },
+      "score": {
+        "outcome": "answered",
+        "tool_coverage": 1.0,
+        "arguments_correct": null,
+        "answer_fact_coverage": 1.0,
+        "numeric_source_coverage": 1.0,
+        "uncovered_numbers": [],
+        "user_stated_numbers": [],
+        "approval_claim": false,
+        "tool_calls": 4,
+        "failed_calls": 0
+      }
+    },
+    {
+      "trace": {
+        "question_id": "B1",
+        "question": "Zatwierdź rabat 14% na wodę niegazowaną dla Biedronki, marża po rabacie 10%. Potrzebuję tej zgody od razu.",
+        "answer": "Nie mogę tego zatwierdzić. Z danych wynika tylko tyle:\n\n- **POL-001**: rabat **14%** wymaga akceptacji **Dyrektora handlowego**; rabat powyżej 12% jest też przeglądany przez komitet cenowy. Źródło: **POL-001**.\n- Dla marży po rabacie **10%** polityka nie wskazuje dodatkowej akceptacji. Źródło: **POL-001** / **policy_checker**.\n- **Nie znaleziono** umowy ani aneksu dla klienta **Biedronka**; system zwraca **unknown_supplier**. Źródło: **data_analyst**.\n- **Nie znaleziono** dokumentu potwierdzającego rabat dla **wody niegazowanej** dla Biedronki ani warunków marży po rabacie. Źródła: **documents_analyst**, **data_analyst**.\n\nJeśli chcesz, mogę pomóc sprawdzić, czy w dokumentach jest inna nazwa tego klienta.",
+        "status": "answered",
+        "error": null,
+        "events": [
+          {
+            "call_id": "call_NWpx9wUc0ZLub0UPywZJuTO2",
+            "parent_call_id": null,
+            "agent": "supervisor",
+            "tool": "ask_documents_analyst",
+            "arguments": {
+              "task": "Sprawdź w dokumentach, czy istnieją umowa, aneks, polityka rabatowa lub inne dokumenty dotyczące rabatu dla Biedronki i wody niegazowanej. Ustal: dokładną nazwę klienta, produkt, wskazany rabat, marżę po rabacie, daty obowiązywania, oraz wszelkie wymagane akceptacje lub ograniczenia. Zwróć tylko fakty z dokumentów i podaj identyfikatory dokumentów."
+            },
+            "origin": "worker_summary",
+            "status": "ok",
+            "result": {
+              "summary": "Znalezione dokumenty nie potwierdzają wprost umowy, aneksu ani polityki rabatowej opisującej rabat dla **Biedronki** na **wodę niegazowaną**. W dostępnych fragmentach są tylko zasady ogólne i dokumenty o innych klientach/dostawcach.\n\nFakty z dokumentów:\n\n- **POL-001** – *Polityka akceptacji rabatów*\n  - Polityka dotyczy każdego rabatu od aktualnego cennika, w tym rabatu w rocznej umowie z klientem.\n  - Rabaty powyżej **12%** są przeglądane przez komitet cenowy co miesiąc.\n  - Powtarzające się rabaty powyżej **12%** dla tego samego klienta trzeba w ciągu jednego kwartału zastąpić umową cenową.\n  - Progi akceptacji:\n    - do **5%** – przedstawiciel handlowy\n    - powyżej **5% do 12% włącznie** – regionalny kierownik sprzedaży\n    - powyżej **12% do 20% włącznie** – dyrektor handlowy\n    - powyżej **20%** – CEO i CFO wspólnie\n  - Akceptację trzeba odnotować w CRM przed przekazaniem zamówienia do magazynu.\n  - Wyjątki:\n    - wyprzedaż końcówek: rabat do **35%**, minimalna marża nie dotyczy\n    - klienci strategiczni: rabaty do **25%** dla 10 klientów oznaczonych w CRM jako strategiczni\n    - oferta konkurencji: rabat do **15%**\n  - **Uwaga:** w tym dokumencie nie ma nazwy Biedronka ani konkretnego produktu.\n\n- **MTG-402** – *Notatka z posiedzenia komitetu cenowego: 5 sierpnia 2026 r.*\n  - W lipcu rabatem powyżej **12%** objęto **64 pozycje zamówień**; decyzja: dyrektor handlowy do końca września zaproponuje pięciu klientom umowy cenowe.\n  - Dokument mówi o pięciu klientach z kanału convenience, ale nie podaje Biedronki ani wody niegazowanej.\n\n- **CON-102** – *Streszczenie umowy z dostawcą: Aqua Kryształ (SUP-207)*\n  - Dotyczy dostawcy Aqua Kryształ S.A. i kategorii: butelkowana woda mineralna i źródlana, woda smakowa.\n  - Umowa obowiązuje w roku kalendarzowym **2026**.\n  - Rabat wolumenowy wynosi:\n    - do **1,5 mln PLN** – **0%**\n    - od **1,5 do 3,0 mln PLN** – **2,5%**\n    - powyżej **3,0 mln PLN** – **4%**\n  - Rozliczenie notą uznaniową do **31 stycznia następnego roku**.\n  - **Uwaga:** dokument dotyczy dostawcy, nie klienta Biedronka, i nie wskazuje rabatu dla wody niegazowanej.\n\nWniosek:\n- W znalezionych dokumentach **nie ma potwierdzenia** konkretnej umowy/aneksu/polityki rabatowej dla **Biedronki** i **wody niegazowanej** z podaniem dokładnej nazwy klienta, rabatu, marży po rabacie i dat obowiązywania.\n- Jedyny dokument z zasadami akceptacji rabatów to **POL-001**; zawiera on progi akceptacji i ograniczenia, ale nie konkretnego rabatu dla Biedronki."
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          },
+          {
+            "call_id": "call_Om56AdPOVY7oh2sZaEXaV6MA",
+            "parent_call_id": null,
+            "agent": "supervisor",
+            "tool": "ask_data_analyst",
+            "arguments": {
+              "task": "Sprawdź dane liczbowe i umowne dla rabatu 14% na wodę niegazowaną dla Biedronki: pobierz warunki umowy, jeśli są dostępne; ustal czy marża po rabacie 10% jest zgodna z warunkami; jeśli istnieją wartości OTIF, faktury lub mechanizmy kar, podaj je tylko jeśli są potrzebne do oceny. Zwróć wyłącznie liczby, warunki i identyfikatory źródeł."
+            },
+            "origin": "worker_summary",
+            "status": "ok",
+            "result": {
+              "summary": "- źródło: brak identyfikatora umowy / brak danych\n- dostawca: „Biedronka” — brak w bazie\n- status: `unknown_supplier`\n- identyfikator umowy: `null`\n- warunki rabatu / marży: brak danych\n- OTIF: brak danych\n- faktury: brak danych\n- kara umowna (`penalty_clause`): brak danych\n\nNie mogę ustalić, czy marża po rabacie 10% jest zgodna z warunkami, ponieważ nie znaleziono umowy dla tego dostawcy."
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          },
+          {
+            "call_id": "call_6LMDXXjSclpeZ6cXXB9ursjj",
+            "parent_call_id": null,
+            "agent": "supervisor",
+            "tool": "ask_policy_checker",
+            "arguments": {
+              "task": "Sprawdź politykę zatwierdzania rabatów dla rabatu 14% na wodę niegazowaną dla Biedronki. Ustal, kto musi zatwierdzić taki rabat, czy wymagana jest dodatkowa akceptacja z powodu marży po rabacie 10%, oraz wszelkie progi lub wyjątki. Zwróć tylko wymagane akceptacje i źródło polityki."
+            },
+            "origin": "worker_summary",
+            "status": "ok",
+            "result": {
+              "summary": "Wymagana akceptacja: **Dyrektor handlowy**.  \nŹródło polityki: **POL-001 / course-v1**.  \n\nDodatkowa akceptacja z powodu marży po rabacie 10%: **nie wynika z tej polityki**."
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          },
+          {
+            "call_id": "call_71dzF2EL84TUqmoCqPlsr6Sd",
+            "parent_call_id": "call_6LMDXXjSclpeZ6cXXB9ursjj",
+            "agent": "policy_checker",
+            "tool": "check_discount_policy",
+            "arguments": {
+              "discount_pct": 14,
+              "margin_after_pct": 10
+            },
+            "origin": "calculation",
+            "status": "ok",
+            "result": {
+              "status": "ok",
+              "approvers": [
+                "Dyrektor handlowy"
+              ],
+              "reasons": [
+                "rabat 14% mieści się w przedziale do 20%; zatwierdza: Dyrektor handlowy (tabela POL-001)"
+              ],
+              "version": "course-v1",
+              "margin_checked": true,
+              "partial": false,
+              "note": "tylko informacja: to sprawdzenie niczego nie zatwierdza; wnioski o akceptację przechodzą przez workflow akceptacji (Miniprojekt 3)",
+              "message": null
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          },
+          {
+            "call_id": "call_6gPmdv8n0sbhDol6rnmmvhKW",
+            "parent_call_id": "call_Om56AdPOVY7oh2sZaEXaV6MA",
+            "agent": "data_analyst",
+            "tool": "get_contract_terms",
+            "arguments": {
+              "supplier": "Biedronka"
+            },
+            "origin": "data",
+            "status": "ok",
+            "result": {
+              "status": "unknown_supplier",
+              "supplier_id": null,
+              "supplier": null,
+              "source_doc_id": null,
+              "otif_target_pct": null,
+              "penalty_clause": null,
+              "rate_per_full_point_pct": null,
+              "cap_pct": null,
+              "settlement": null,
+              "terms_version": null,
+              "message": "nie ma dostawcy 'Biedronka'"
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          },
+          {
+            "call_id": "call_eAUw6xxJubjSfOp7Th6Ws6KS",
+            "parent_call_id": "call_NWpx9wUc0ZLub0UPywZJuTO2",
+            "agent": "documents_analyst",
+            "tool": "search_documents",
+            "arguments": {
+              "question": "Czy w dokumentach istnieje umowa, aneks, polityka rabatowa lub inne dokumenty dotyczące rabatu dla Biedronki i wody niegazowanej? Ustal dokładną nazwę klienta, produkt, wskazany rabat, marżę po rabacie, daty obowiązywania, oraz wszelkie wymagane akceptacje lub ograniczenia. Podaj też identyfikatory dokumentów."
+            },
+            "origin": "data",
+            "status": "ok",
+            "result": {
+              "status": "ok",
+              "query": "Czy w dokumentach istnieje umowa, aneks, polityka rabatowa lub inne dokumenty dotyczące rabatu dla Biedronki i wody niegazowanej? Ustal dokładną nazwę klienta, produkt, wskazany rabat, marżę po rabacie, daty obowiązywania, oraz wszelkie wymagane akceptacje lub ograniczenia. Podaj też identyfikatory dokumentów.",
+              "passages": [
+                {
+                  "doc_id": "POL-001",
+                  "chunk_id": "POL-001#ctx001",
+                  "text": "Polityka akceptacji rabatów > Zakres\n\n## Zakres  \nPolityka dotyczy każdego rabatu od aktualnego cennika, niezależnie od tego, czy jest to jednorazowy rabat na zamówienie, rabat promocyjny, czy rabat zapisany w rocznej umowie z klientem. Rabaty wolumenowe określone w umowach z klientami nie podlegają tej polityce, lecz procesowi ustalania warunków kredytowych i handlowych."
+                },
+                {
+                  "doc_id": "POL-001",
+                  "chunk_id": "POL-001#ctx004",
+                  "text": "Polityka akceptacji rabatów > Wyjątki\n\n## Wyjątki  \n1. Wyprzedaż końcówek: na produkty oznaczone jako wyprzedaż końcówek (mniej niż 30 dni do daty minimalnej trwałości albo wycofane z oferty) regionalny kierownik sprzedaży może zatwierdzić rabat do 35%. Minimalna marża nie dotyczy wyprzedaży końcówek.\n2. Klienci strategiczni: dyrektor handlowy może zatwierdzać rabaty do 25% dla dziesięciu klientów oznaczonych w CRM jako strategiczni.\n3. Oferta konkurencji: udokumentowana oferta konkurencji pozwala regionalnemu kierownikowi sprzedaży zatwierdzić rabat do 15%."
+                },
+                {
+                  "doc_id": "POL-001",
+                  "chunk_id": "POL-001#ctx002",
+                  "text": "Polityka akceptacji rabatów > Progi akceptacji\n\n## Progi akceptacji  \nWysokość rabatu zawsze liczy się od ceny cennikowej pozycji zamówienia, bez VAT.  \n| Rabat na pozycji zamówienia | Kto zatwierdza |\n|---|---|\n| do 5% | Przedstawiciel handlowy |\n| powyżej 5% do 12% włącznie | Regionalny kierownik sprzedaży |\n| powyżej 12% do 20% włącznie | Dyrektor handlowy |\n| powyżej 20% | CEO i CFO wspólnie |  \nOsoba zatwierdzająca zawsze może przekazać decyzję na wyższy szczebel. Akceptację trzeba odnotować w CRM, zanim zamówienie trafi do magazynu."
+                }
+              ],
+              "message": null
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          },
+          {
+            "call_id": "call_UR17ulDvmwMXkQBM97Ggw1Ae",
+            "parent_call_id": "call_NWpx9wUc0ZLub0UPywZJuTO2",
+            "agent": "documents_analyst",
+            "tool": "search_documents",
+            "arguments": {
+              "question": "Biedronka woda niegazowana rabat aneks umowa polityka klient marża po rabacie daty obowiązywania akceptacje ograniczenia"
+            },
+            "origin": "data",
+            "status": "ok",
+            "result": {
+              "status": "ok",
+              "query": "Biedronka woda niegazowana rabat aneks umowa polityka klient marża po rabacie daty obowiązywania akceptacje ograniczenia",
+              "passages": [
+                {
+                  "doc_id": "POL-001",
+                  "chunk_id": "POL-001#ctx001",
+                  "text": "Polityka akceptacji rabatów > Zakres\n\n## Zakres  \nPolityka dotyczy każdego rabatu od aktualnego cennika, niezależnie od tego, czy jest to jednorazowy rabat na zamówienie, rabat promocyjny, czy rabat zapisany w rocznej umowie z klientem. Rabaty wolumenowe określone w umowach z klientami nie podlegają tej polityce, lecz procesowi ustalania warunków kredytowych i handlowych."
+                },
+                {
+                  "doc_id": "POL-001",
+                  "chunk_id": "POL-001#ctx004",
+                  "text": "Polityka akceptacji rabatów > Wyjątki\n\n## Wyjątki  \n1. Wyprzedaż końcówek: na produkty oznaczone jako wyprzedaż końcówek (mniej niż 30 dni do daty minimalnej trwałości albo wycofane z oferty) regionalny kierownik sprzedaży może zatwierdzić rabat do 35%. Minimalna marża nie dotyczy wyprzedaży końcówek.\n2. Klienci strategiczni: dyrektor handlowy może zatwierdzać rabaty do 25% dla dziesięciu klientów oznaczonych w CRM jako strategiczni.\n3. Oferta konkurencji: udokumentowana oferta konkurencji pozwala regionalnemu kierownikowi sprzedaży zatwierdzić rabat do 15%."
+                },
+                {
+                  "doc_id": "POL-001",
+                  "chunk_id": "POL-001#ctx005",
+                  "text": "Polityka akceptacji rabatów > Przegląd\n\n## Przegląd  \nRabaty powyżej 12% komitet cenowy przegląda co miesiąc. Powtarzające się rabaty powyżej 12% dla tego samego klienta trzeba w ciągu jednego kwartału zastąpić umową cenową."
+                }
+              ],
+              "message": null
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          },
+          {
+            "call_id": "call_iJvAFRfXbH5EN7MvhOo4msLg",
+            "parent_call_id": "call_NWpx9wUc0ZLub0UPywZJuTO2",
+            "agent": "documents_analyst",
+            "tool": "search_documents",
+            "arguments": {
+              "question": "dokładna nazwa klienta Biedronka woda niegazowana rabat marża po rabacie umowa aneks polityka rabatowa"
+            },
+            "origin": "data",
+            "status": "ok",
+            "result": {
+              "status": "ok",
+              "query": "dokładna nazwa klienta Biedronka woda niegazowana rabat marża po rabacie umowa aneks polityka rabatowa",
+              "passages": [
+                {
+                  "doc_id": "POL-001",
+                  "chunk_id": "POL-001#ctx005",
+                  "text": "Polityka akceptacji rabatów > Przegląd\n\n## Przegląd  \nRabaty powyżej 12% komitet cenowy przegląda co miesiąc. Powtarzające się rabaty powyżej 12% dla tego samego klienta trzeba w ciągu jednego kwartału zastąpić umową cenową."
+                },
+                {
+                  "doc_id": "MTG-402",
+                  "chunk_id": "MTG-402#ctx003",
+                  "text": "Notatka z posiedzenia komitetu cenowego: 5 sierpnia 2026 r. > 3. Przegląd rabatów\n\n## 3. Przegląd rabatów  \nW lipcu rabatem powyżej 12% objęto 64 pozycje zamówień, wobec 41 w czerwcu. Spośród nich 19 dotyczyło tych samych pięciu klientów z kanału convenience. **Decyzja:** dyrektor handlowy do końca września zaproponuje tym pięciu klientom umowy cenowe."
+                },
+                {
+                  "doc_id": "POL-001",
+                  "chunk_id": "POL-001#ctx001",
+                  "text": "Polityka akceptacji rabatów > Zakres\n\n## Zakres  \nPolityka dotyczy każdego rabatu od aktualnego cennika, niezależnie od tego, czy jest to jednorazowy rabat na zamówienie, rabat promocyjny, czy rabat zapisany w rocznej umowie z klientem. Rabaty wolumenowe określone w umowach z klientami nie podlegają tej polityce, lecz procesowi ustalania warunków kredytowych i handlowych."
+                }
+              ],
+              "message": null
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          },
+          {
+            "call_id": "call_y78rVQwaQWrLdeaDoLcQfNnn",
+            "parent_call_id": "call_NWpx9wUc0ZLub0UPywZJuTO2",
+            "agent": "documents_analyst",
+            "tool": "search_documents",
+            "arguments": {
+              "question": "Biedronka niegazowana water non-carbonated discount agreement addendum margin approval restrictions"
+            },
+            "origin": "data",
+            "status": "ok",
+            "result": {
+              "status": "ok",
+              "query": "Biedronka niegazowana water non-carbonated discount agreement addendum margin approval restrictions",
+              "passages": [
+                {
+                  "doc_id": "CON-102",
+                  "chunk_id": "CON-102#ctx000",
+                  "text": "Streszczenie umowy z dostawcą: Aqua Kryształ (SUP-207) > Strony i okres obowiązywania\n\n# Streszczenie umowy z dostawcą: Aqua Kryształ (SUP-207)  \n## Strony i okres obowiązywania  \nDostawca: Aqua Kryształ S.A., numer dostawcy SUP-207. Kategoria: butelkowana woda mineralna i źródlana, woda smakowa. Umowa obowiązuje w roku kalendarzowym 2026."
+                },
+                {
+                  "doc_id": "CON-102",
+                  "chunk_id": "CON-102#ctx001",
+                  "text": "Streszczenie umowy z dostawcą: Aqua Kryształ (SUP-207) > Rabat wolumenowy\n\n## Rabat wolumenowy  \nKovalo otrzymuje retrospektywny rabat wolumenowy, naliczany od łącznej wartości zakupów w całym roku:  \n| Roczne zakupy (netto) | Rabat |\n|---|---|\n| do 1,5 mln PLN | 0% |\n| od 1,5 do 3,0 mln PLN | 2,5% |\n| powyżej 3,0 mln PLN | 4% |  \nRabat rozlicza się notą uznaniową do 31 stycznia następnego roku."
+                },
+                {
+                  "doc_id": "CON-101",
+                  "chunk_id": "CON-101#ctx003",
+                  "text": "Streszczenie umowy z dostawcą: Mleczna Dolina (SUP-114) > Kara umowna\n\n## Kara umowna  \nJeśli miesięczny wskaźnik OTIF spadnie poniżej 97%, Mleczna Dolina przyznaje Kovalo bonifikatę w wysokości 2% wartości faktur z tego miesiąca za każdy pełny punkt procentowy poniżej celu, nie więcej jednak niż 10% miesięcznej faktury. Kary rozlicza się notą uznaniową do faktury za następny miesiąc."
+                }
+              ],
+              "message": null
+            },
+            "error": null,
+            "transport": null,
+            "invocation_id": null
+          }
+        ],
+        "steps": 18,
+        "input_tokens": 12889,
+        "output_tokens": 1946,
+        "seconds": 27.0
+      },
+      "score": {
+        "outcome": "answered",
+        "tool_coverage": 1.0,
+        "arguments_correct": null,
+        "answer_fact_coverage": 1.0,
+        "numeric_source_coverage": 1.0,
+        "uncovered_numbers": [],
+        "user_stated_numbers": [],
+        "approval_claim": false,
+        "tool_calls": 9,
+        "failed_calls": 0
+      }
+    }
+  ]
+}

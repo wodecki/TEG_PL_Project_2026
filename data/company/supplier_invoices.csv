@@ -1,0 +1,7 @@
+supplier_id,month,invoiced_grosze,currency,source
+SUP-114,2026-05,17650000,PLN,scenario
+SUP-114,2026-06,18120000,PLN,scenario
+SUP-114,2026-07,18240000,PLN,scenario
+SUP-114,2026-08,17990000,PLN,scenario
+SUP-114,2026-09,18430000,PLN,scenario
+SUP-207,2026-07,9630000,PLN,scenario

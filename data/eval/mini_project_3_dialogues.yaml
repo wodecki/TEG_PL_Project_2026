@@ -1,0 +1,90 @@
+# Dialogi Miniprojektu 3: mały zestaw do nauki workflow copilota.
+#
+# Każda tura:
+#   user        co pisze menedżer
+#   understand  IDEALNE zrozumienie wiadomości (Turn). Używane dwa razy:
+#               - odtworzenie offline: sztuczny LLM zwraca dokładnie to, więc workflow i reguły
+#                 testujemy bez żadnego LLM;
+#               - ocena na żywo: Turn z prawdziwego LLM porównujemy z `expect.fields`.
+#   resume      zaplanowane odpowiedzi na pauzy tej tury, po kolei (liczba przy doprecyzowaniu;
+#               approved / rejected / cancel przy akceptacji)
+#   expect      wzorzec SPRAWDZONY RĘCZNIE: kind, fields, request (po aktualizacji), approvers
+#               (kursowa interpretacja course-v1, wyliczona ręcznie, NIE przez testowany kod),
+#               pauses ([typ, rola albo pole], po kolei) i końcowy status.
+dialogues:
+  - id: D1
+    title: Pytania o politykę rabatową (tylko informacja, nigdy pauza)
+    turns:
+      - user: Kto zatwierdza rabat 15% dla zwykłego klienta?
+        understand: {kind: policy_question, request_action: none, standalone: "Kto zatwierdza rabat 15% dla zwykłego klienta?", discount_pct: 15}
+        resume: []
+        expect: {kind: policy_question, fields: {discount_pct: 15}, approvers: [Dyrektor handlowy], pauses: [], status: answered}
+      - user: A 22%?
+        understand: {kind: policy_question, request_action: none, standalone: "Kto zatwierdza rabat 22% dla zwykłego klienta?", discount_pct: 22}
+        resume: []
+        expect: {kind: policy_question, fields: {discount_pct: 22}, approvers: [CEO, CFO], pauses: [], status: answered}
+      - user: Kto zatwierdza 3% dla klienta strategicznego przy marży po rabacie 10%?
+        understand: {kind: policy_question, request_action: none, standalone: "Kto zatwierdza rabat 3% dla klienta strategicznego przy marży po rabacie 10%?", discount_pct: 3, margin_after_pct: 10, strategic_account: true}
+        resume: []
+        expect: {kind: policy_question, fields: {discount_pct: 3, margin_after_pct: 10, strategic_account: true}, approvers: [Przedstawiciel handlowy], pauses: [], status: answered}
+  - id: D2
+    title: Akceptacja, a potem zmiana, która wymaga nowej, wspólnej akceptacji
+    turns:
+      - user: Prześlij do akceptacji rabat 14% na wodę dla Biedronki Express; marża po rabacie wyniesie 10%.
+        understand: {kind: approval_request, request_action: new, standalone: "Prześlij do akceptacji rabat 14% na wodę dla Biedronki Express z marżą po rabacie 10%.", discount_pct: 14, margin_after_pct: 10, customer: Biedronka Express, product: woda}
+        resume: [approved]
+        expect: {kind: approval_request, fields: {discount_pct: 14, margin_after_pct: 10}, request: {revision: 1, discount_pct: 14, margin_after_pct: 10, clearance: false, strategic_account: false, competitor_offer: false}, approvers: [Dyrektor handlowy], pauses: [[approval, Dyrektor handlowy]], status: approved}
+      - user: Jednak zróbmy 22%, marża bez zmian.
+        understand: {kind: approval_request, request_action: update, standalone: "Zmień rabat na wodę dla Biedronki Express na 22% przy marży po rabacie 10%.", discount_pct: 22, margin_after_pct: 10}
+        resume: [approved, rejected]
+        expect: {kind: approval_request, fields: {discount_pct: 22, margin_after_pct: 10}, request: {revision: 2, discount_pct: 22, margin_after_pct: 10}, approvers: [CEO, CFO], pauses: [[approval, CEO], [approval, CFO]], status: rejected}
+  - id: D3
+    title: Brak marży, a potem minimalna marża
+    turns:
+      - user: Prześlij do akceptacji rabat 8% na chipsy dla Delikatesów Pod Lipami.
+        understand: {kind: approval_request, request_action: new, standalone: "Prześlij do akceptacji rabat 8% na chipsy dla Delikatesów Pod Lipami.", discount_pct: 8, customer: Delikatesy Pod Lipami, product: chipsy}
+        resume: [7, approved, approved]
+        expect: {kind: approval_request, fields: {discount_pct: 8, margin_after_pct: null}, request: {revision: 1, discount_pct: 8, margin_after_pct: 7}, approvers: [Regionalny kierownik sprzedaży, CFO], pauses: [[clarification, margin_after_pct], [approval, Regionalny kierownik sprzedaży], [approval, CFO]], status: approved}
+  - id: D4
+    title: Wyprzedaż końcówek, a potem nowe zamówienie, które jej nie dziedziczy
+    turns:
+      - user: Prześlij do akceptacji rabat 30% na jogurt z wyprzedaży końcówek; marża po rabacie wynosi 4%.
+        understand: {kind: approval_request, request_action: new, standalone: "Prześlij do akceptacji rabat 30% na jogurt z wyprzedaży końcówek z marżą po rabacie 4%.", discount_pct: 30, margin_after_pct: 4, clearance: true, product: jogurt}
+        resume: [approved]
+        expect: {kind: approval_request, fields: {discount_pct: 30, margin_after_pct: 4, clearance: true}, request: {revision: 1, clearance: true}, approvers: [Regionalny kierownik sprzedaży], pauses: [[approval, Regionalny kierownik sprzedaży]], status: approved}
+      - user: Nowe zamówienie – 30% rabatu na wodę niegazowaną dla Żabki nr 12, marża po rabacie 11%.
+        understand: {kind: approval_request, request_action: new, standalone: "Prześlij do akceptacji rabat 30% na wodę niegazowaną dla Żabki nr 12 z marżą po rabacie 11%.", discount_pct: 30, margin_after_pct: 11, customer: Żabka nr 12, product: woda niegazowana}
+        resume: [cancel]
+        expect: {kind: approval_request, fields: {discount_pct: 30, margin_after_pct: 11}, request: {revision: 1, discount_pct: 30, margin_after_pct: 11, clearance: false}, approvers: [CEO, CFO], pauses: [[approval, CEO]], status: cancelled}
+  - id: D5
+    title: Klient strategiczny poniżej minimalnej marży
+    turns:
+      - user: Prześlij do akceptacji rabat 22% dla naszego klienta strategicznego Carrefour Express; marża po rabacie wynosi 7%.
+        understand: {kind: approval_request, request_action: new, standalone: "Prześlij do akceptacji rabat 22% dla klienta strategicznego Carrefour Express z marżą po rabacie 7%.", discount_pct: 22, margin_after_pct: 7, strategic_account: true, customer: Carrefour Express}
+        resume: [approved, approved]
+        expect: {kind: approval_request, fields: {discount_pct: 22, margin_after_pct: 7, strategic_account: true}, request: {revision: 1, strategic_account: true}, approvers: [Dyrektor handlowy, CFO], pauses: [[approval, Dyrektor handlowy], [approval, CFO]], status: approved}
+  - id: D6
+    title: Oferta konkurencji dla klienta strategicznego (wygrywa najniższy szczebel)
+    turns:
+      - user: Prześlij do akceptacji 14% dla klienta strategicznego Auchan Moje, żeby dorównać udokumentowanej ofercie konkurencji; marża po rabacie 7%.
+        understand: {kind: approval_request, request_action: new, standalone: "Prześlij do akceptacji rabat 14% dla klienta strategicznego Auchan Moje w odpowiedzi na udokumentowaną ofertę konkurencji, z marżą po rabacie 7%.", discount_pct: 14, margin_after_pct: 7, strategic_account: true, competitor_offer: true, customer: Auchan Moje}
+        resume: [approved, rejected]
+        expect: {kind: approval_request, fields: {discount_pct: 14, margin_after_pct: 7, strategic_account: true, competitor_offer: true}, request: {revision: 1, strategic_account: true, competitor_offer: true}, approvers: [Regionalny kierownik sprzedaży, CFO], pauses: [[approval, Regionalny kierownik sprzedaży], [approval, CFO]], status: rejected}
+  - id: D7
+    title: Pytanie o dokumenty, a potem podziękowanie
+    turns:
+      - user: Co komitet cenowy postanowił w sprawie cen wody butelkowanej?
+        understand: {kind: document_question, request_action: none, standalone: "Co komitet cenowy postanowił w sprawie cen wody butelkowanej?"}
+        resume: []
+        expect: {kind: document_question, pauses: [], status: answered}
+      - user: Dzięki!
+        understand: {kind: other, request_action: none, standalone: "Dzięki!"}
+        resume: []
+        expect: {kind: other, pauses: [], status: answered}
+  - id: D8
+    title: Wyprzedaż końcówek powyżej limitu (zwolnienie z minimalnej marży nadal obowiązuje)
+    turns:
+      - user: Prześlij do akceptacji rabat 36% na jogurt z wyprzedaży końcówek; marża po rabacie wynosi 4%.
+        understand: {kind: approval_request, request_action: new, standalone: "Prześlij do akceptacji rabat 36% na jogurt z wyprzedaży końcówek z marżą po rabacie 4%.", discount_pct: 36, margin_after_pct: 4, clearance: true, product: jogurt}
+        resume: [approved, approved]
+        expect: {kind: approval_request, fields: {discount_pct: 36, margin_after_pct: 4, clearance: true}, request: {revision: 1, clearance: true}, approvers: [CEO, CFO], pauses: [[approval, CEO], [approval, CFO]], status: approved}

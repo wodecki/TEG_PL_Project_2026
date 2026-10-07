@@ -1,0 +1,25 @@
+# Miesięczne warunki OTIF z umów Kovalo z dostawcami: WYBRANE I UPORZĄDKOWANE zapisy
+# umów, żeby program mógł sprawdzić, czy klauzula istnieje, zanim zacznie liczyć.
+# Rozstrzyga tekst umowy; instructor/tests/test_mp4_contract_terms.py sprawdza z nim
+# każdą wartość poniżej.
+version: terms-v1
+otif_terms:
+  SUP-114:
+    source_doc_id: CON-101
+    otif_target_pct: 97                # „co najmniej 97% dostaw na czas i w komplecie (OTIF, on-time-in-full), mierzone co miesiąc”
+    penalty_clause: true
+    rate_per_full_point_pct: 2         # „2% wartości faktur z tego miesiąca za każdy pełny punkt procentowy poniżej celu”
+    cap_pct: 10                        # „nie więcej jednak niż 10% miesięcznej faktury”
+    settlement: nota uznaniowa do faktury za następny miesiąc
+  SUP-207:
+    source_doc_id: CON-102
+    otif_target_pct: 96                # „Standardowy cel OTIF (dostawy na czas i w komplecie): 96%”
+    penalty_clause: false              # „Umowa nie przewiduje kar finansowych”
+    rate_per_full_point_pct: null      # nie dotyczy: brak klauzuli (nigdy 0)
+    cap_pct: null
+    settlement: słabsze wyniki dostawcy omawia się na kwartalnym przeglądzie biznesowym
+# Umowy z poziomem obsługi, który NIE jest miesięcznym OTIF: nigdy nie są źródłem warunków OTIF.
+not_otif:
+  - name: TransBałt
+    source_doc_id: CON-103
+    reason: "poziom terminowych dostaw palet (98% palet w uzgodnionym oknie czasowym), bez części dotyczącej kompletności, bez miesięcznego OTIF i bez wzoru na karę: przeczytaj CON-103 przez search_documents"

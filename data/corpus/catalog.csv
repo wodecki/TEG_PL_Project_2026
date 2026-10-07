@@ -1,0 +1,19 @@
+doc_id,file,title,doc_type,department,owner,effective_date,language
+CON-101,CON-101_supplier_agreement_mleczna_dolina.md,Streszczenie umowy z dostawcą: Mleczna Dolina (SUP-114),contract,Zakupy,Kierownik działu zakupów,2025-04-01,pl
+CON-102,CON-102_supplier_agreement_aqua_krysztal.md,Streszczenie umowy z dostawcą: Aqua Kryształ (SUP-207),contract,Zakupy,Kierownik działu zakupów,2026-01-01,pl
+CON-103,CON-103_logistics_subcontractor_transbalt.md,Umowa z podwykonawcą logistycznym: TransBałt,contract,Logistyka,Kierownik logistyki,2025-09-01,pl
+FAQ-501,FAQ-501_kpi_definitions.md,Definicje wskaźników KPI,faq,Operacje,Dyrektor operacyjny,2026-01-15,pl
+MTG-401,MTG-401_management_meeting_2026-07-14.md,Notatka z posiedzenia zarządu: 14 lipca 2026 r.,meeting_notes,Zarząd,CEO,2026-07-14,pl
+MTG-402,MTG-402_pricing_committee_2026-08-05.md,Notatka z posiedzenia komitetu cenowego: 5 sierpnia 2026 r.,meeting_notes,Sprzedaż,Dyrektor handlowy,2026-08-05,pl
+MTG-403,MTG-403_supplier_review_mleczna_dolina_2026-08-20.md,"Spotkanie przeglądowe z dostawcą: Mleczna Dolina, 20 sierpnia 2026 r.",meeting_notes,Zakupy,Kierownik działu zakupów,2026-08-20,pl
+PL-601,PL-601_regulamin_magazynu_gdansk.md,Regulamin magazynu w Gdańsku,procedure,Magazyn,Kierownik magazynu w Gdańsku,2025-06-01,en
+POL-001,POL-001_discount_approval_policy.md,Polityka akceptacji rabatów,policy,Sprzedaż,Dyrektor handlowy,2026-01-01,pl
+POL-002,POL-002_credit_and_payment_terms.md,Polityka limitów kredytowych i terminów płatności,policy,Finanse,CFO,2026-01-01,pl
+POL-003,POL-003_returns_and_damaged_goods.md,Polityka zwrotów i reklamacji towarów uszkodzonych,policy,Obsługa klienta,Kierownik działu obsługi klienta,2025-10-01,pl
+POL-004,POL-004_travel_and_expenses.md,Polityka podróży służbowych i rozliczania wydatków,policy,Finanse,Kierownik finansowy,2025-07-01,pl
+POL-005,POL-005_supplier_selection.md,Polityka wyboru i wdrażania dostawców,policy,Zakupy,Kierownik działu zakupów,2026-02-01,pl
+PRO-201,PRO-201_order_to_delivery.md,Procedura realizacji zamówienia: od przyjęcia do dostawy,procedure,Logistyka,Kierownik logistyki,2026-03-01,pl
+PRO-202,PRO-202_stock_count_and_writeoff.md,Procedura inwentaryzacji i spisywania strat magazynowych,procedure,Magazyn,Kierownik operacji magazynowych,2025-11-01,pl
+PRO-203,PRO-203_cold_chain_incident.md,Procedura postępowania przy incydentach w łańcuchu chłodniczym,procedure,Jakość,Kierownik ds. jakości,2026-02-15,pl
+REP-301,REP-301_q2_2026_operations_review.md,Przegląd operacyjny za II kwartał 2026 r.,report,Operacje,Dyrektor operacyjny,2026-07-10,pl
+REP-302,REP-302_customer_churn_h1_2026.md,Analiza odejść klientów w I półroczu 2026 r.,report,Sprzedaż,Dyrektor handlowy,2026-07-20,pl

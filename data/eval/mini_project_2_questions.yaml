@@ -1,0 +1,123 @@
+# Pytania do Miniprojektu 2: mały zestaw do nauki, a nie miara niezawodności.
+#
+# answerable     czy korpus odpowiada na pytanie? (na dwa pytania celowo nie odpowiada)
+# relevant_docs  dokumenty, które zawierają odpowiedź
+# requires_all   true: odpowiedź wymaga WSZYSTKICH relevant_docs naraz; false: wystarczy dowolny z nich
+# evidence_facts frazy, które musi zawierać znaleziony tekst, żeby dało się odpowiedzieć (poziom 2:
+#                dowody). Frazy są skopiowane dosłownie z dokumentów i tam, gdzie to możliwe, wyrażają
+#                ZWIĄZEK (wiersz tabeli, fragment zdania), a nie luźne słowa: samo „CFO” występuje
+#                w wielu dokumentach. To nadal przybliżenie: dowód sformułowany inaczej zostanie pominięty.
+# key_facts      co musi podać poprawna odpowiedź (poziom 3: odpowiedź)
+#   Każdy fakt to lista akceptowanych wariantów. Dopasowanie pomija wielkość liter i nadmiarowe
+#   spacje, nie trafia wewnątrz dłuższego słowa ani liczby i nie rozpoznaje odmiany: formy
+#   odmienione („dyrektor handlowy”, „dyrektora handlowego”) i oba zapisy liczb („94,6%”, „94.6%”)
+#   to osobne warianty. To pokrycie, a nie dowód poprawności: „nie CFO” też zawiera „CFO”.
+# reference      odpowiedź wzorcowa dla sędziego (LLM-as-judge) i dla RAGAS
+questions:
+  - id: M01
+    question: Kto musi zatwierdzić rabat 15% dla dużej sieci handlowej?
+    answerable: true
+    relevant_docs: [POL-001]
+    requires_all: false
+    evidence_facts: [["powyżej 12% do 20% włącznie | Dyrektor handlowy"]]
+    key_facts: [["dyrektor handlowy", "dyrektora handlowego"]]
+    reference: Rabat 15% mieści się w przedziale powyżej 12% do 20% włącznie, więc zatwierdza go dyrektor handlowy.
+  # M02: odpowiedź wymaga obu dokumentów. Wynik za lipiec jest w notatce ze spotkania (MTG-403),
+  # zasada naliczania kary w umowie (CON-101).
+  - id: M02
+    question: Jaką karę płaci Mleczna Dolina za lipiec i dlaczego?
+    answerable: true
+    relevant_docs: [CON-101, MTG-403]
+    requires_all: true
+    evidence_facts: [["94,6%", "dwa pełne punkty"], ["za każdy pełny punkt procentowy"]]
+    key_facts: [["4%", "4 %", "cztery procent"]]
+    reference: Mleczna Dolina płaci karę w wysokości 4% wartości faktur za lipiec. OTIF w lipcu wyniósł 94,6%, czyli o dwa pełne punkty procentowe poniżej wymaganych w umowie 97%, a umowa przewiduje 2% za każdy pełny punkt procentowy poniżej celu.
+  # M03: ten sam dokument co Q10 w Miniprojekcie 1; pytanie wskazuje umowę tylko kodem dostawcy.
+  - id: M03
+    question: Co SUP-114 mówi o karach?
+    answerable: true
+    relevant_docs: [CON-101]
+    requires_all: false
+    evidence_facts: [["za każdy pełny punkt procentowy"], ["nie więcej jednak niż 10%"]]
+    key_facts:
+      - ["2%", "2 %"]
+      - ["każdy pełny punkt procentowy", "każdy pełny punkt", "każdego pełnego punktu procentowego", "każdego pełnego punktu"]
+      - ["10%", "10 %"]
+    reference: Jeśli miesięczny OTIF spadnie poniżej 97%, dostawca przyznaje Kovalo bonifikatę w wysokości 2% wartości faktur z tego miesiąca za każdy pełny punkt procentowy poniżej celu, nie więcej jednak niż 10% miesięcznej faktury. Karę rozlicza się notą uznaniową do faktury za następny miesiąc.
+  # M04: pytanie po polsku, dokument (PL-601) po angielsku; fraza dowodowa jest więc angielska.
+  - id: M04
+    question: Kto może jeździć wózkiem widłowym w magazynie w Gdańsku?
+    answerable: true
+    relevant_docs: [PL-601]
+    requires_all: false
+    evidence_facts: [["only by people with valid UDT certification"]]
+    key_facts: [["UDT"]]
+    reference: Wózki widłowe w magazynie w Gdańsku mogą obsługiwać tylko osoby z ważnymi uprawnieniami UDT.
+  - id: M05
+    question: Kto zatwierdza spisanie w straty towaru o wartości powyżej 25 000 PLN?
+    answerable: true
+    relevant_docs: [PRO-202]
+    requires_all: false
+    evidence_facts: [["powyżej 25 000 PLN | CFO"]]
+    key_facts: [["CFO", "dyrektor finansowy", "dyrektora finansowego"]]
+    reference: Spisanie w straty o wartości powyżej 25 000 PLN zatwierdza CFO.
+  - id: M06
+    question: Kto może uznać reklamację uszkodzonego towaru na kwotę powyżej 2000 PLN?
+    answerable: true
+    relevant_docs: [POL-003]
+    requires_all: false
+    evidence_facts: [["Reklamacje powyżej 2000 PLN wymagają zgody kierownika działu obsługi klienta"]]
+    key_facts: [["kierownik działu obsługi klienta", "kierownika działu obsługi klienta"]]
+    reference: Reklamacje powyżej 2000 PLN wymagają zgody kierownika działu obsługi klienta.
+  - id: M07
+    question: Kiedy nowa umowa dostawy wymaga formalnego przetargu?
+    answerable: true
+    relevant_docs: [POL-005]
+    requires_all: false
+    evidence_facts: [["Umowy o wartości powyżej 500 000 PLN rocznie wymagają formalnego przetargu"]]
+    key_facts: [["500 000 PLN", "500 000 zł", "500 000 złotych", "500 tys. PLN", "500 tys. zł"]]
+    reference: Umowy o wartości powyżej 500 000 PLN rocznie wymagają formalnego przetargu zatwierdzonego na posiedzeniu zarządu.
+  - id: M08
+    question: Jaka jest minimalna marża przy rabatach i kto zatwierdza rabat, który by ją naruszył?
+    answerable: true
+    relevant_docs: [POL-001]
+    requires_all: false
+    evidence_facts: [["marży brutto pozycji zamówienia poniżej 9%"], ["Rabat, który naruszałby minimalną marżę, wymaga zgody CFO"]]
+    key_facts: [["9%", "9 %"], ["CFO", "dyrektor finansowy", "dyrektora finansowego"]]
+    reference: Żaden rabat nie może obniżyć marży brutto pozycji zamówienia poniżej 9%. Rabat, który naruszałby minimalną marżę, wymaga zgody CFO bez względu na swoją wysokość.
+  # M09: wystarczy jeden z dwóch dokumentów; każdy podaje cenę jako przyczynę inną drogą.
+  - id: M09
+    question: Dlaczego klienci przechodzą do firmy Hurtix?
+    answerable: true
+    relevant_docs: [MTG-402, REP-302]
+    requires_all: false
+    evidence_facts: [["w cenach o 6–8% niższych od cennika Kovalo", "Lepsze ceny u konkurencji, głównie w firmie Hurtix | 29%"]]
+    key_facts: [["ceny", "cen", "cenach", "cenami", "taniej", "tańsza", "tańsze", "tańszy", "tańszych"]]
+    reference: Hurtix oferuje niższe ceny. Według komitetu cenowego jego ceny napojów są o 6–8% niższe od cennika Kovalo, a analiza odejść klientów wskazuje lepsze ceny u konkurencji, głównie w firmie Hurtix, jako jedną z głównych przyczyn odejść.
+  - id: M10
+    question: Co dostarcza nam dostawca SUP-207?
+    answerable: true
+    relevant_docs: [CON-102]
+    requires_all: false
+    evidence_facts: [["butelkowana woda mineralna i źródlana"], ["woda smakowa"]]
+    key_facts:
+      - ["mineralna", "mineralną", "mineralnej", "mineralne"]
+      - ["smakowa", "smakową", "smakowej", "smakowe"]
+    reference: SUP-207, czyli Aqua Kryształ, dostarcza butelkowaną wodę mineralną i źródlaną oraz wodę smakową.
+  # M11 i M12: korpus nie zawiera odpowiedzi; poprawny wynik to odmowa.
+  - id: M11
+    question: Ile zarabia nasz CEO?
+    answerable: false
+    relevant_docs: []
+    requires_all: false
+    evidence_facts: []
+    key_facts: []
+    reference: Dokumenty nie podają wynagrodzenia CEO.
+  - id: M12
+    question: Kiedy otworzymy nowy magazyn w Krakowie?
+    answerable: false
+    relevant_docs: []
+    requires_all: false
+    evidence_facts: []
+    key_facts: []
+    reference: Dokumenty nie wspominają o magazynie w Krakowie; magazyny Kovalo są w Łodzi, Poznaniu i Gdańsku.

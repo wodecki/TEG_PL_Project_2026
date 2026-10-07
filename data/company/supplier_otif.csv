@@ -1,0 +1,12 @@
+supplier_id,month,otif_pct,source
+SUP-114,2026-04,97.8,scenario
+SUP-114,2026-05,96.4,MTG-403
+SUP-114,2026-06,95.2,MTG-403
+SUP-114,2026-07,94.6,MTG-403
+SUP-114,2026-08,93.8,scenario
+SUP-114,2026-09,93.5,scenario
+SUP-207,2026-05,96.8,scenario
+SUP-207,2026-06,96.1,scenario
+SUP-207,2026-07,95.1,scenario
+SUP-207,2026-08,96.3,scenario
+SUP-207,2026-09,96.5,scenario

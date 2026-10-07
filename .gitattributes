@@ -1,0 +1,5 @@
+# Keep LF line endings on every system, so files are identical everywhere.
+# (Python reads either kind of line ending the same way: this is consistency,
+# not a requirement of the code.)
+* text=auto eol=lf
+data/embeddings/cache/** -text

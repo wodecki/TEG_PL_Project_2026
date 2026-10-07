@@ -1,0 +1,174 @@
+# Kovalo Decision Copilot – konfiguracja projektu.
+#
+# Nie zmieniaj wartości oznaczonych PINNED: zależą od nich testy i dołączona pamięć
+# podręczna (ang. cache) reprezentacji wektorowych tekstu (ang. embeddings).
+# Ścieżki są podawane względem folderu zawierającego ten plik.
+
+paths:
+  corpus_dir: data/corpus
+  corpus_catalog: data/corpus/catalog.csv   # metadane: jeden wiersz na dokument
+  eval_queries: data/eval/mini_project_1_queries.yaml
+  embedding_cache: data/embeddings/cache      # LocalFileStore z LangChain, dostarczony z kursem
+  mini_project_1_output_dir: mini_project_1/output
+  mini_project_2_questions: data/eval/mini_project_2_questions.yaml
+  mini_project_2_output_dir: mini_project_2/output
+  mini_project_3_dialogues: data/eval/mini_project_3_dialogues.yaml
+  mini_project_3_output_dir: mini_project_3/output
+  company_data_dir: data/company              # dane firmy Kovalo (stan na konkretny dzień, tylko do odczytu)
+  mini_project_4_questions: data/eval/mini_project_4_questions.yaml
+  mini_project_4_output_dir: mini_project_4/output
+  mini_project_5_conversations: data/eval/mini_project_5_conversations.yaml
+  mini_project_5_output_dir: mini_project_5/output
+
+corpus:
+  required_metadata: [doc_id, title, doc_type, department, owner, effective_date, language]
+
+tokenizer:
+  encoding: o200k_base            # PINNED – tokenizer modeli z rodzin GPT-4o i GPT-5
+
+chunking:
+  chunk_size: 800                 # PINNED – w znakach
+  chunk_overlap: 120              # PINNED – w znakach
+  separators: ["\n\n", "\n", ". ", " ", ""]   # PINNED – próbowane w tej kolejności
+
+embeddings:
+  model: text-embedding-3-small   # PINNED
+  dimensions: 1536                # PINNED
+  batch_size: 64
+
+retrieval:
+  top_k: 3                        # PINNED
+
+reference_llm:
+  # PINNED – LLM, z którym projekt jest budowany i sprawdzany: używają go przebiegi
+  # referencyjne, testy na żywo i koszty podane w README.
+  provider: openai
+  model: gpt-5.4-mini
+
+llm:
+  # TWÓJ WYBÓR – LLM, którego używasz od kroku 6. Polecamy LLM referencyjny powyżej;
+  # zobacz „Który LLM?” w README.md. Inne możliwości (bez gwarancji, wyniki mogą się różnić):
+  #   openrouter: model: openai/gpt-5.4-mini       klucz: OPENROUTER_API_KEY w .env
+  #   ollama:     model: gemma3:4b                 bez klucza; Ollama działa na twoim komputerze
+  provider: openai                # openai (polecany) | openrouter | ollama
+  model: gpt-5.4-mini
+  temperature: 0                  # niektóre modele (np. z rodziny GPT-5) przyjmują tylko domyślną; LangChain ją wtedy pomija
+  base_urls:                      # adresy API poszczególnych dostawców
+    openrouter: https://openrouter.ai/api/v1
+    ollama: http://localhost:11434
+  api_key_env:                    # zmienna w .env z kluczem danego dostawcy
+    openai: OPENAI_API_KEY
+    openrouter: OPENROUTER_API_KEY
+
+cost:
+  # Miesięczne oszacowanie zawsze liczy się według cen tego modelu, niezależnie od twojego LLM-a.
+  reference_model: gpt-5.4-mini   # PINNED
+  # Ceny z cennika OpenAI w USD za milion tokenów, październik 2026 r. Są przypięte, żeby
+  # wyliczenia kosztów dało się powtórzyć; aktualne ceny sprawdzisz na stronie dostawcy.
+  prices_per_1m_tokens:           # PINNED
+    text-embedding-3-small: {input: 0.02, output: 0.0}
+    gpt-5.4-mini: {input: 0.75, output: 4.50}
+  scenario:                       # PINNED
+    questions_per_day: 400
+    working_days_per_month: 21
+    output_tokens_per_answer: 350
+
+policy:
+  # PINNED – polityka rabatowa POL-001 jako dane, z kursową interpretacją „course-v1”
+  # tego, czego tekst polityki nie rozstrzyga (zobacz mini_project_3/README.md).
+  version: course-v1
+  bands:                          # zwykłe przedziały akceptacji: rabat do limitu włącznie
+    - {up_to: 5, roles: [Przedstawiciel handlowy]}
+    - {up_to: 12, roles: [Regionalny kierownik sprzedaży]}
+    - {up_to: 20, roles: [Dyrektor handlowy]}
+    - {up_to: 100, roles: [CEO, CFO]}
+  exceptions:                     # każdy obniża poziom uprawnień do `roles`, ale tylko do limitu `cap`
+    clearance: {cap: 35, roles: [Regionalny kierownik sprzedaży]}
+    strategic_account: {cap: 25, roles: [Dyrektor handlowy]}
+    competitor_offer: {cap: 15, roles: [Regionalny kierownik sprzedaży]}
+  margin_floor: 9                 # marża po rabacie PONIŻEJ tej wartości dodaje floor_role…
+  floor_role: CFO                 # …chyba że towar to wyprzedaż końcówek
+
+agent:
+  # PINNED – Miniprojekt 4: jeden limit na pytanie, wspólny dla wszystkich agentów, którzy nad nim pracują
+  max_steps: 24                   # tury modelu + wyniki narzędzi
+  timeout_s: 180                  # sekundy, sprawdzane przed każdym krokiem (trwające wywołanie najpierw się kończy)
+
+mcp:
+  # PINNED – Miniprojekt 5: limity czasu połączenia z serwerem MCP Kovalo
+  startup_timeout_s: 60           # serwer, który nie dokończy inicjalizacji, zostaje zamknięty
+  call_timeout_s: 120             # dłuższe wywołanie narzędzia jest anulowane; połączenie nie jest wtedy używane ponownie
+  cleanup_timeout_s: 10           # najpierw łagodne zamknięcie (SDK czeka 2 s, potem kończy, a w ostateczności wymusza zakończenie procesu)
+
+prompts:
+  system: |                       # PINNED
+    Jesteś Kovalo Decision Copilot, asystentem kadry zarządzającej Kovalo Distribution.
+    Odpowiadaj wyłącznie na podstawie wewnętrznych dokumentów podanych w kontekście.
+    Przy każdym fakcie, z którego korzystasz, podaj identyfikator dokumentu. Jeśli
+    dokumenty nie zawierają odpowiedzi, powiedz to wprost, zamiast zgadywać.
+  answer_system: |                # PINNED – odpowiedzi Miniprojektu 2
+    Jesteś Kovalo Decision Copilot, asystentem kadry zarządzającej Kovalo Distribution.
+    Odpowiadaj wyłącznie na podstawie wewnętrznych dokumentów podanych w kontekście;
+    każdy dokument zaczyna się od identyfikatora w nawiasach kwadratowych, np. [POL-001].
+    Jako odwołania do źródeł wypisz identyfikatory dokumentów, z których korzystasz.
+    Odpowiadaj w języku pytania, także gdy dokumenty w kontekście są w innym języku:
+    na pytanie po polsku odpowiadaj po polsku. Liczby zapisuj po polsku (94,6%;
+    7296,00 PLN). Jeśli dokumenty nie zawierają odpowiedzi, ustaw answerable na false
+    i powiedz to wprost, zamiast zgadywać.
+  understand_system: |            # PINNED – wywołanie „understand” w Miniprojekcie 3
+    Czytasz najnowszą wiadomość menedżera, który rozmawia z copilotem decyzyjnym Kovalo,
+    i ustalasz, jak ją obsłużyć. Uwzględnij wcześniejszą rozmowę, żeby zrozumieć
+    pytania uzupełniające.
+    kind:
+      document_question – pyta, co mówią dokumenty Kovalo (polityki, umowy, notatki ze
+                          spotkań, raporty), z wyjątkiem pytania, kto akceptuje rabat;
+      policy_question   – pyta, kto zaakceptowałby rabat albo co mówią zasady rabatowe,
+                          BEZ prośby o przesłanie rabatu do akceptacji;
+      approval_request  – wprost prosi, żeby konkretny rabat przesłać do akceptacji,
+                          zgłosić albo uzyskać na niego zgodę;
+      other             – podziękowania, powitania, luźna rozmowa, wszystko inne.
+    request_action: "new" – nowy wniosek o rabat (inne zamówienie, klient lub produkt);
+      "update" – wiadomość zmienia omawiany rabat; "none" – w pozostałych przypadkach.
+    standalone: wiadomość przepisana tak, żeby była zrozumiała bez wcześniejszej rozmowy.
+    Pola rabatu: wypełniaj je tylko tym, co mówi menedżer, albo tym, co jasno wynika
+    z wcześniejszej rozmowy. Flagi (clearance, strategic_account, competitor_offer):
+    null, gdy wiadomość o nich nie wspomina; true albo false tylko wtedy, gdy wspomina.
+  agent_system: |                 # PINNED – agent Miniprojektu 4
+    Jesteś analitykiem Kovalo Decision Copilot i pracujesz dla kadry zarządzającej Kovalo.
+    Korzystaj z narzędzi: search_documents do tego, co mówią dokumenty Kovalo (umowy,
+    polityki, notatki ze spotkań, raporty); get_contract_terms do warunków umowy z dostawcą
+    dotyczących miesięcznego OTIF; get_supplier_otif i get_invoice_value do danych liczbowych;
+    calculate_otif_penalty do obliczania kar; check_discount_policy do ustalenia, kto musi
+    zaakceptować rabat.
+    Zasady:
+    - Każda liczba w odpowiedzi musi pochodzić z wyniku narzędzia w tej rozmowie. Napisz, skąd
+      pochodzi: z dokumentu (podaj jego identyfikator), z danych firmy albo z obliczenia.
+    - Zanim uznasz, że kara jest należna, sprawdź warunki umowy z dostawcą: bez klauzuli
+      o karze umownej kara nie przysługuje, niezależnie od OTIF.
+    - Jeśli brakuje danych, napisz dokładnie, czego brakuje. Nigdy ich nie szacuj ani nie
+      zastępuj założeniami.
+    - Nie możesz niczego zaakceptować, przesłać ani obiecać. Gdy chodzi o akceptację, napisz,
+      kto musi jej udzielić i że wniosek przechodzi przez proces akceptacji w Kovalo.
+    - Odpowiadaj krótko, w języku pytania, także gdy dokumenty lub dane są w innym języku:
+      na pytanie po polsku odpowiadaj po polsku. Liczby zapisuj po polsku (94,6%;
+      7296,00 PLN; 18 240 000 groszy).
+  assistant_understand_system: |  # PINNED – wywołanie „understand” w Miniprojekcie 5 (jak w Miniprojekcie 3, z danymi firmy)
+    Czytasz najnowszą wiadomość menedżera, który rozmawia z copilotem decyzyjnym Kovalo,
+    i ustalasz, jak ją obsłużyć. Uwzględnij wcześniejszą rozmowę, żeby zrozumieć
+    pytania uzupełniające.
+    kind:
+      document_question – pyta, co mówią dokumenty lub dane firmy Kovalo (polityki, umowy,
+                          notatki ze spotkań, raporty, OTIF dostawców, faktury, kary),
+                          z wyjątkiem pytania, kto akceptuje rabat;
+      policy_question   – pyta, kto zaakceptowałby rabat albo co mówią zasady rabatowe,
+                          BEZ prośby o przesłanie rabatu do akceptacji;
+      approval_request  – wprost prosi, żeby konkretny rabat przesłać do akceptacji,
+                          zgłosić albo uzyskać na niego zgodę;
+      other             – podziękowania, powitania, luźna rozmowa, wszystko inne.
+    request_action: "new" – nowy wniosek o rabat (inne zamówienie, klient lub produkt);
+      "update" – wiadomość zmienia omawiany rabat ALBO przesyła go ponownie („prześlij to”,
+      „spróbuj jeszcze raz”, „te same warunki”); "none" – w pozostałych przypadkach.
+    standalone: wiadomość przepisana tak, żeby była zrozumiała bez wcześniejszej rozmowy.
+    Pola rabatu: wypełniaj je tylko tym, co mówi menedżer, albo tym, co jasno wynika
+    z wcześniejszej rozmowy. Flagi (clearance, strategic_account, competitor_offer):
+    null, gdy wiadomość o nich nie wspomina; true albo false tylko wtedy, gdy wspomina.

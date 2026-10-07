@@ -1,0 +1,124 @@
+# Miniprojekt 5: rozmowy, które przechodzą między drogami asystenta. Zestaw do nauki, nie benchmark.
+#
+# Pełnego asystenta oceniamy według OCZEKIWANEJ DROGI KAŻDEJ TURY (expect.kind):
+#   document_question  agent odpowiada przez MCP: musi powstać zapis przebiegu agenta (trace)
+#                      i obowiązują sprawdzenia z Miniprojektu 4 (expect.agent: needs, calculations,
+#                      key_facts, jak we wzorcu Miniprojektu 4);
+#   policy_question    odpowiadają reguły z Miniprojektu 3: osoby zatwierdzające, bez pauzy, BEZ trace'u agenta;
+#   approval_request   workflow z Miniprojektu 3: wniosek, osoby zatwierdzające, pauzy po kolei, końcowy status;
+#   other              krótka odpowiedź z Miniprojektu 3.
+# Tura, która poszła inną drogą, nadal jest liczona we wszystkich wymiarach, które definiuje jej
+# oczekiwana droga. 8 dialogów Miniprojektu 3 (data/eval/mini_project_3_dialogues.yaml) oceniamy tak samo.
+#
+# understand  IDEALNE zrozumienie (odtworzenie offline: sztuczny LLM zwraca dokładnie to)
+# resume      zaplanowane odpowiedzi na pauzy, po kolei
+# expect      wzorzec SPRAWDZONY RĘCZNIE (kursowa interpretacja course-v1 i liczby wyliczone ręcznie
+#             w Miniprojekcie 4, nigdy przez testowany kod)
+#
+# mp3_overlays dodaje do dialogów Miniprojektu 3 wzorzec używany tylko w Miniprojekcie 5 (tamten plik
+# się nie zmienia): {id dialogu: {numer tury (od 1): {klucz: wartość dodana do expect tej tury}}}.
+mp3_overlays:
+  D7:
+    1:
+      agent:                     # MTG-402, punkt 1: +4% od 1 września 2026 r.; 1% Kovalo bierze na siebie
+        needs:
+          - {tool: search_documents, doc_id: MTG-402}
+        key_facts:
+          - ["4%", "4 %", "4 procent", "4 proc."]
+          - ["1 września", "1.09.2026", "01.09.2026", "2026-09-01"]
+
+conversations:
+  - id: C1
+    title: Pytanie o dane, akceptacja, znów pytanie o dane i ponowne przesłanie bez zmian
+    turns:
+      - user: Ile wynosi kara, którą Mleczna Dolina jest winna Kovalo za lipiec 2026 r.? Podaj kwotę w PLN.
+        understand: {kind: document_question, request_action: none, standalone: "Ile wynosi kara, którą Mleczna Dolina jest winna Kovalo za lipiec 2026 r.? Podaj kwotę w PLN."}
+        resume: []
+        expect:
+          kind: document_question
+          status: answered
+          agent:
+            needs:
+              - {tool: get_contract_terms, supplier_id: SUP-114}
+              - {tool: get_supplier_otif, supplier_id: SUP-114, months: [2026-07]}
+              - {tool: get_invoice_value, supplier_id: SUP-114, months: [2026-07]}
+              - {tool: calculate_otif_penalty}
+            calculations:
+              - {supplier_id: SUP-114, month: 2026-07, otif_pct: 94.6, target_pct: 97, rate_per_full_point_pct: 2, cap_pct: 10, invoice_grosze: 18240000}
+            key_facts:
+              - ["7296", "7 296", "7296,00", "7 296,00", "7296.00", "7,296.00"]
+      - user: Teraz prześlij do akceptacji rabat 14% na wodę niegazowaną dla Biedronki z marżą po rabacie 10%.
+        understand: {kind: approval_request, request_action: new, standalone: "Prześlij do akceptacji rabat 14% na wodę niegazowaną dla Biedronki z marżą po rabacie 10%.", discount_pct: 14, margin_after_pct: 10, customer: Biedronka, product: woda niegazowana}
+        resume: [approved]
+        expect: {kind: approval_request, request: {revision: 1, discount_pct: 14, margin_after_pct: 10, clearance: false, strategic_account: false, competitor_offer: false}, approvers: [Dyrektor handlowy], pauses: [[approval, Dyrektor handlowy]], status: approved}
+      - user: A jaki był OTIF dostawcy Aqua Kryształ w lipcu 2026 r.?
+        understand: {kind: document_question, request_action: none, standalone: "Jaki był OTIF dostawcy Aqua Kryształ w lipcu 2026 r.?"}
+        resume: []
+        expect:
+          kind: document_question
+          status: answered
+          request: {revision: 1, discount_pct: 14}       # pytanie nie zmienia zatwierdzonego wniosku
+          agent:
+            needs:
+              - {tool: get_supplier_otif, supplier_id: SUP-207, months: [2026-07]}
+            key_facts:
+              - ["95,1", "95.1"]
+      - user: Prześlij jeszcze raz ten sam rabat dla Biedronki.
+        understand: {kind: approval_request, request_action: update, standalone: "Prześlij ponownie do akceptacji rabat 14% na wodę niegazowaną dla Biedronki z marżą po rabacie 10%.", discount_pct: 14, margin_after_pct: 10}
+        resume: []
+        expect: {kind: approval_request, request: {revision: 1, discount_pct: 14, margin_after_pct: 10}, approvers: [Dyrektor handlowy], pauses: [], status: approved}
+
+  - id: C2
+    title: Pytanie o politykę rabatową, a potem „prześlij to”
+    turns:
+      - user: Kto musi zatwierdzić rabat 22% dla naszego klienta strategicznego Carrefour Express przy marży po rabacie 7%?
+        understand: {kind: policy_question, request_action: none, standalone: "Kto musi zatwierdzić rabat 22% dla klienta strategicznego Carrefour Express przy marży po rabacie 7%?", discount_pct: 22, margin_after_pct: 7, strategic_account: true, customer: Carrefour Express}
+        resume: []
+        expect: {kind: policy_question, approvers: [Dyrektor handlowy, CFO], pauses: [], status: answered}
+      - user: Prześlij to.
+        understand: {kind: approval_request, request_action: new, standalone: "Prześlij do akceptacji rabat 22% dla klienta strategicznego Carrefour Express z marżą po rabacie 7%.", discount_pct: 22, margin_after_pct: 7, strategic_account: true, customer: Carrefour Express}
+        resume: [approved, approved]
+        expect: {kind: approval_request, request: {revision: 1, discount_pct: 22, margin_after_pct: 7, strategic_account: true}, approvers: [Dyrektor handlowy, CFO], pauses: [[approval, Dyrektor handlowy], [approval, CFO]], status: approved}
+
+  - id: C3
+    title: „Zatwierdź to od razu”, czyli pauza na decyzję człowieka, odrzucenie i nowa runda
+    turns:
+      - user: Zatwierdź rabat 14% na wodę niegazowaną dla Biedronki, marża po rabacie 10%. Potrzebuję tej zgody od razu.
+        understand: {kind: approval_request, request_action: new, standalone: "Zatwierdź rabat 14% na wodę niegazowaną dla Biedronki z marżą po rabacie 10%.", discount_pct: 14, margin_after_pct: 10, customer: Biedronka, product: woda niegazowana}
+        resume: [rejected]
+        expect: {kind: approval_request, request: {revision: 1, discount_pct: 14, margin_after_pct: 10}, approvers: [Dyrektor handlowy], pauses: [[approval, Dyrektor handlowy]], status: rejected}
+      - user: Spróbuj jeszcze raz na tych samych warunkach.
+        understand: {kind: approval_request, request_action: update, standalone: "Prześlij ponownie do akceptacji rabat 14% na wodę niegazowaną dla Biedronki z marżą po rabacie 10%.", discount_pct: 14, margin_after_pct: 10}
+        resume: [approved]
+        expect: {kind: approval_request, request: {revision: 1, discount_pct: 14}, approvers: [Dyrektor handlowy], pauses: [[approval, Dyrektor handlowy]], status: approved}
+
+  - id: C4
+    title: Doprecyzowana marża w późniejszym pytaniu o politykę rabatową
+    turns:
+      - user: Prześlij do akceptacji rabat 8% na chipsy dla Delikatesów Pod Lipami.
+        understand: {kind: approval_request, request_action: new, standalone: "Prześlij do akceptacji rabat 8% na chipsy dla Delikatesów Pod Lipami.", discount_pct: 8, customer: Delikatesy Pod Lipami, product: chipsy}
+        resume: [7, approved, approved]
+        expect: {kind: approval_request, request: {revision: 1, discount_pct: 8, margin_after_pct: 7}, approvers: [Regionalny kierownik sprzedaży, CFO], pauses: [[clarification, margin_after_pct], [approval, Regionalny kierownik sprzedaży], [approval, CFO]], status: approved}
+      - user: Przy tej samej marży kto zatwierdziłby 12%?
+        understand: {kind: policy_question, request_action: none, standalone: "Kto zatwierdziłby rabat 12% przy marży po rabacie 7%?", discount_pct: 12, margin_after_pct: 7}
+        resume: []
+        expect: {kind: policy_question, approvers: [Regionalny kierownik sprzedaży, CFO], pauses: [], status: answered}
+
+  - id: C5
+    title: Brak danych, a potem podziękowanie
+    turns:
+      - user: Jaki był OTIF Mlecznej Doliny w październiku 2026 r.?
+        understand: {kind: document_question, request_action: none, standalone: "Jaki był OTIF Mlecznej Doliny w październiku 2026 r.?"}
+        resume: []
+        expect:
+          kind: document_question
+          status: answered
+          agent:
+            needs:
+              - {tool: get_supplier_otif, supplier_id: SUP-114, missing: [2026-10]}
+            key_facts:
+              - ["brak danych", "brakuje danych", "nie ma danych", "nie ma jeszcze danych", "nie mam danych", "nie mam jeszcze danych", "nie mamy danych", "nie mamy jeszcze danych", "danych nie ma", "danych jeszcze nie ma", "nie są dostępne", "nie są jeszcze dostępne", "nie jest dostępny", "nie jest jeszcze dostępny", "niedostępne", "niedostępny"]
+      - user: Dzięki!
+        understand: {kind: other, request_action: none, standalone: "Dzięki!"}
+        resume: []
+        expect: {kind: other, pauses: [], status: answered}

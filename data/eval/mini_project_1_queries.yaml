@@ -1,0 +1,40 @@
+# Pytania do ewaluacji w Miniprojekcie 1: takie, jakie dyrektor operacyjny zadaje co tydzień.
+# relevant_docs wymienia dokumenty, które zawierają odpowiedź. Pytanie jest trafione
+# przy k (hit@k), jeśli wśród k najlepszych wyników jest dowolny chunk istotnego dokumentu.
+queries:
+  - query_id: Q01
+    question: Kto musi zatwierdzić rabat 15% dla dużej sieci handlowej?
+    relevant_docs: [POL-001]
+  # Q02: parafraza. Towar „przyjechał rozbity”, a polityka mówi o towarze „uszkodzonym”,
+  # o „zgłoszeniu” i o terminie „od dostawy”; pytanie nie używa tych słów.
+  - query_id: Q02
+    question: Ile czasu ma klient na to, żeby dać nam znać, że towar przyjechał rozbity?
+    relevant_docs: [POL-003]
+  - query_id: Q03
+    question: Czy nasz dostawca nabiału dotrzymuje warunków dostaw?
+    relevant_docs: [MTG-403, CON-101]
+  - query_id: Q04
+    question: Jakie terminy płatności dajemy zupełnie nowemu klientowi?
+    relevant_docs: [POL-002]
+  - query_id: Q05
+    question: Jak liczy się OTIF?
+    relevant_docs: [FAQ-501]
+  # Q06: parafraza. Pytanie mówi, że „w ciężarówce przestanie działać lodówka”, a procedura,
+  # że „w trasie zepsuje się agregat chłodniczy”; pytanie nie używa tych słów.
+  - query_id: Q06
+    question: Co ma zrobić kierowca, kiedy w ciężarówce przestanie działać lodówka?
+    relevant_docs: [PRO-203]
+  # Q07: między językami. Pytanie jest po polsku, a regulamin magazynu (PL-601) po angielsku.
+  - query_id: Q07
+    question: Jaki sprzęt ochronny muszą nosić goście w magazynie w Gdańsku?
+    relevant_docs: [PL-601]
+  - query_id: Q08
+    question: Dlaczego tracimy klientów?
+    relevant_docs: [REP-302]
+  - query_id: Q09
+    question: Co ustaliliśmy w sprawie cen wody butelkowanej?
+    relevant_docs: [MTG-402]
+  # Q10: dokładny identyfikator. Pytanie wskazuje umowę tylko kodem dostawcy, bez nazwy.
+  - query_id: Q10
+    question: Co SUP-114 mówi o karach?
+    relevant_docs: [CON-101]
